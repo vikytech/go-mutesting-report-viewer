@@ -6,6 +6,9 @@
 ```zsh
 ./go_mutesting_html_report -file <PATH_TO_JSON_REPORT>
 ```
+> Note: Make sure you also have the template.html in the same directory as the executable
+
+If you have trouble running on Mac os run: `xattr -d com.apple.quarantine go_mutesting_html_report`
 
 ## To run locally
 ```zsh
