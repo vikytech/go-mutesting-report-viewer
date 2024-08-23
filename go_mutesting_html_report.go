@@ -92,6 +92,6 @@ func main() {
 		executeTemplate(data)
 		os.Exit(0)
 	}
-	log.Println("Error: No file path provided.\n Usage: go run main.go -file <PATH_TO_REPORT>")
+	log.Println("Error: No file path provided.\n Usage: go run go_mutesting_html_report.go -file <PATH_TO_REPORT>")
 	os.Exit(1)
 }
