@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>JSON Visualization</title>
+    <link rel="icon" type="image/png" href="assets/img/favicon.ico" />
+    <title>Mutation Report</title>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -17,7 +18,7 @@
         text-align: center;
         font-size: 35px;
       }
-      p{
+      p {
         text-align: center;
       }
       pre {
@@ -25,6 +26,7 @@
         padding: 10px;
         border-radius: 5px;
         border: #0000007d inset 5px;
+        overflow: scroll;
       }
       .diff {
         margin-top: 20px;
@@ -51,27 +53,25 @@
     <link
       rel="stylesheet"
       type="text/css"
-      href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css"
-    />
+      href="assets/vendor/css/diff2html.min.css"
+    />    
     <script
       type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html.min.js"
+      src="assets/vendor/js/diff2html-ui.min.js"
     ></script>
     <script>
       function pretifyDiff(diffSrcElement) {
-        const html = Diff2Html.html(diffSrcElement.innerHTML, {
-          inputFormat: "diff",
+        const html = new Diff2HtmlUI(diffSrcElement, diffSrcElement.innerHTML, {
           outputFormat: "line-by-line",
+          highlightLanguages: "go",
           matchingMaxComparisons: 25,
           matchWordsThreshold: 0.35,
-          matching: "lines",
-          highlightLanguages: "go",
-          colorScheme: "auto",
           drawFileList: false,
+          colorScheme: "light"
         });
-
-        document.getElementById(diffSrcElement.id).innerHTML = html;
-        return html;
+        html.draw();
+        
+        
       }
     </script>
   </head>
