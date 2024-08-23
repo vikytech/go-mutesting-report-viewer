@@ -21,7 +21,5 @@ go run go_mutesting_html_report.go -file <PATH_TO_JSON_REPORT>
  - Enhanced UI / UX
  - Compare Reports
 
-
-
 ### Dependencies
-- (diff2html)[https://diff2html.xyz/]
+- [diff2html](https://diff2html.xyz)
