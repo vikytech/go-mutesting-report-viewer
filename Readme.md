@@ -12,9 +12,11 @@
 go run go_mutesting_html_report.go -file <PATH_TO_JSON_REPORT>
 ```
 
+### Features
+- View Diff with changes highlighted line-by-line
+- Mark as Viewed and collapse the same
 
 ### Upcoming features
- - Mark as done and hide the same
  - Filter
  - Enhanced UI / UX
  - Compare Reports

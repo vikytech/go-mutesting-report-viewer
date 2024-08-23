@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="assets/img/favicon.ico">
+    <link rel="icon" type="image/png" href="assets/img/favicon.ico" />
     <title>Mutation Report</title>
     <style>
       body {
@@ -56,23 +56,19 @@
     />
     <script
       type="text/javascript"
-      src="assets/vendor/js/diff2html.min.js"
+      src="assets/vendor/js/diff2html-ui.min.js"
     ></script>
     <script>
       function pretifyDiff(diffSrcElement) {
-        const html = Diff2Html.html(diffSrcElement.innerHTML, {
-          inputFormat: "diff",
+        const html = new Diff2HtmlUI(diffSrcElement, diffSrcElement.innerHTML, {
           outputFormat: "line-by-line",
+          highlightLanguages: "go",
           matchingMaxComparisons: 25,
           matchWordsThreshold: 0.35,
-          matching: "lines",
-          highlightLanguages: "go",
-          colorScheme: "auto",
           drawFileList: false,
+          colorScheme: "light",
         });
-
-        document.getElementById(diffSrcElement.id).innerHTML = html;
-        return html;
+        html.draw();
       }
     </script>
   </head>
