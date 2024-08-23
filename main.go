@@ -5,11 +5,9 @@ import (
 	"flag"
 	"fmt"
 	"html/template"
-	"io"
-	"io/ioutil"
 	"log"
-	"net/http"
 	"os"
+	"os/exec"
 )
 
 type Mutator struct {
@@ -56,7 +54,7 @@ func readJson(filePath string) Data {
 		os.Exit(1)
 	}
 
-	jsonData, err := ioutil.ReadFile(*jsonFilePath)
+	jsonData, err := os.ReadFile(*jsonFilePath)
 	if err != nil {
 		fmt.Println("Error reading file:", err)
 		os.Exit(1)
@@ -73,7 +71,8 @@ func readJson(filePath string) Data {
 
 func executeTemplate(data Data) {
 	tmpl := template.Must(template.ParseFiles("template.html"))
-	report, err := os.Create("docs/report.html")
+	outputReportFilePath := "report.html"
+	report, err := os.Create(outputReportFilePath)
 	if err != nil {
 		log.Println("Unable to create report file: ", err)
 		return
@@ -84,43 +83,7 @@ func executeTemplate(data Data) {
 		fmt.Errorf("Error executing template: " + err.Error())
 		return
 	}
-}
-
-func uploadJson(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("template.html"))
-	if r.Method == http.MethodPost {
-		file, _, err := r.FormFile("file")
-		if err != nil {
-			http.Error(w, "Unable to get file from form: "+err.Error(), http.StatusBadRequest)
-			return
-		}
-		defer file.Close()
-
-		jsonData, err := io.ReadAll(file)
-		if err != nil {
-			http.Error(w, "Unable to read file: "+err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		var data Data
-		err = json.Unmarshal(jsonData, &data)
-		if err != nil {
-			http.Error(w, "Invalid JSON format: "+err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		err = tmpl.Execute(w, data)
-		if err != nil {
-			http.Error(w, "Error executing template: "+err.Error(), http.StatusInternalServerError)
-			return
-		}
-	} else {
-		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
-	}
-}
-
-func serveIndex(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "docs/index.html")
+	exec.Command("open", outputReportFilePath).Start()
 }
 
 func main() {
@@ -129,9 +92,6 @@ func main() {
 		executeTemplate(data)
 		os.Exit(0)
 	}
-
-	http.HandleFunc("/", serveIndex)
-	http.HandleFunc("/upload", uploadJson)
-	fmt.Println("Server started at http://localhost:8080")
-	http.ListenAndServe(":8080", nil)
+	log.Println("Error: No file path provided.\n Usage: go run main.go -file <PATH_TO_REPORT>")
+	os.Exit(1)
 }
