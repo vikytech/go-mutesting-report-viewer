@@ -1,0 +1,42 @@
+{
+  "stats": {
+    "totalMutantsCount": 2,
+    "killedCount": 1,
+    "notCoveredCount": 0,
+    "escapedCount": 1,
+    "errorCount": 0,
+    "skippedCount": 0,
+    "timeOutCount": 0,
+    "msi": 0.70369304556354916,
+    "mutationCodeCoverage": 0,
+    "coveredCodeMsi": 0
+  },
+  "escaped": [
+    {
+      "mutator": {
+        "mutatorName": "arithmetic/assignment",
+        "originalSourceCode": "Source Code",
+        "mutatedSourceCode": "Mutated Code",
+        "originalFilePath": "services/dispute-details_service.go",
+        "originalStartLine": 0
+      },
+      "diff": "--- Original\n+++ New\n@@ -393,7 +393,7 @@\n \tfound := false\n \tfor key, network := range cardNetworks {\n \t\tif strings.EqualFold(key, upperCardType) {\n-\t\t\tcategory += network\n+\t\t\tcategory = network\n \t\t\tfound = true\n \t\t\tbreak\n \t\t}\n",
+      "processOutput": "FAIL \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.4\" with checksum 821490ccbe82a8675692dabddca9de69\n"
+    }
+  ],
+  "timeouted": null,
+  "killed": [
+    {
+      "mutator": {
+        "mutatorName": "statement/remove",
+        "originalSourceCode": "Source Code",
+        "mutatedSourceCode": "Mutated Code",
+        "originalFilePath": "services/dispute-details_service.go",
+        "originalStartLine": 0
+      },
+      "diff": "--- Original\n+++ New\n@@ -623,45 +623,7 @@\n \tmm, _ := strconv.ParseInt(dateArr[1], 10, 64)\n \tdd, _ := strconv.ParseInt(dateArr[2], 10, 64)\n \ttransactionDate := fmt.Sprintf(\"%d/%d/%d\", mm, dd, yyyy)\n-\n-\tsfdcRequest.CustomFieldData.CustomFields = []dto.CustomField{\n-\t\t{\n-\t\t\tName:  \"TransactionDate\",\n-\t\t\tValue: transactionDate,\n-\t\t},\n-\t\t{\n-\t\t\tName:  \"TransactionRefNo\",\n-\t\t\tValue: pfmResponse.SourceTransactionId,\n-\t\t},\n-\t\t{\n-\t\t\tName:  \"OtherReason\",\n-\t\t\tValue: markRaiseDisputeRequest.UserInteractions[0].InternalLabel,\n-\t\t},\n-\t\t{\n-\t\t\tName:  \"Narration\",\n-\t\t\tValue: pfmResponse.UserNarration,\n-\t\t},\n-\t\t{\n-\t\t\tName:  \"Mode\",\n-\t\t\tValue: sfdcMode,\n-\t\t},\n-\t\t{\n-\t\t\tName:  \"ReasonForDispute\",\n-\t\t\tValue: markRaiseDisputeRequest.UserInteractions[0].InternalLabel,\n-\t\t},\n-\t\t{\n-\t\t\tName:  \"NoOfDisputedTransaction\",\n-\t\t\tValue: \"1\",\n-\t\t},\n-\t\t{\n-\t\t\tName:  \"Amount\",\n-\t\t\tValue: fmt.Sprintf(\"%f\", pfmResponse.AbsoluteAmount),\n-\t\t},\n-\t\t{\n-\t\t\tName:  \"DisputeAmount\",\n-\t\t\tValue: fmt.Sprintf(\"%f\", disputeAmount),\n-\t\t},\n-\t}\n+\t_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = sfdcRequest.CustomFieldData.CustomFields, dto.CustomField, Name, Value, transactionDate, Name, Value, pfmResponse.SourceTransactionId, Name, Value, Name, Value, pfmResponse.UserNarration, Name, Value, sfdcMode, Name, Value, Name, Value, Name, Value, fmt.Sprintf, pfmResponse.AbsoluteAmount, Name, Value, fmt.Sprintf, disputeAmount\n \n \tif strings.HasPrefix(strings.ToUpper(pfmResponse.UserNarration), \"POS\") {\n \t\tsfdcRequest.CustomFieldData.CustomFields = append(sfdcRequest.CustomFieldData.CustomFields, dto.CustomField{\n",
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.427\" with checksum d9e1c69337d0d9218833e2e7f2d041df\n"
+    }
+  ],
+  "errored": null
+}

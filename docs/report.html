@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON Visualization</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      .section {
+        margin-bottom: 20px;
+      }
+      h1,
+      h2 {
+        color: #333;
+        text-align: center;
+        font-size: 35px;
+      }
+      p{
+        text-align: center;
+      }
+      pre {
+        background-color: #f4f4f4;
+        padding: 10px;
+        border-radius: 5px;
+        border: #0000007d inset 5px;
+      }
+      .diff {
+        margin-top: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
+      th,
+      td {
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css"
+    />
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html.min.js"
+    ></script>
+    <script>
+      function pretifyDiff(diffSrcElement) {
+        const html = Diff2Html.html(diffSrcElement.innerHTML, {
+          inputFormat: "diff",
+          outputFormat: "line-by-line",
+          matchingMaxComparisons: 25,
+          matchWordsThreshold: 0.35,
+          matching: "lines",
+          highlightLanguages: "go",
+          colorScheme: "auto",
+          drawFileList: false,
+        });
+
+        document.getElementById(diffSrcElement.id).innerHTML = html;
+        return html;
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Mutation Report</h1>
+
+    <div id="stats" class="section">
+      <h2>Stats</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Total Mutants Count</th>
+            <th>Killed Count</th>
+            <th>Not Covered Count</th>
+            <th>Escaped Count</th>
+            <th>Error Count</th>
+            <th>Skipped Count</th>
+            <th>Timeout Count</th>
+            <th>MSI</th>
+            <th>Mutation Code Coverage</th>
+            <th>Covered Code MSI</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>417</td>
+            <td>160</td>
+            <td>0</td>
+            <td>257</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0.38369304556354916</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <hr />
+    <div id="escaped" class="section">
+      <h2>Escaped</h2>
+       
+      <div>
+        <h3>Mutator:</h3>
+        <pre>arithmetic/assignment</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-0">--- Original
+&#43;&#43;&#43; New
+@@ -393,7 &#43;393,7 @@
+ 	found := false
+ 	for key, network := range cardNetworks {
+ 		if strings.EqualFold(key, upperCardType) {
+-			category &#43;= network
+&#43;			category = network
+ 			found = true
+ 			break
+ 		}
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.4&#34; with checksum 821490ccbe82a8675692dabddca9de69
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>arithmetic/assignment</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-1">--- Original
+&#43;&#43;&#43; New
+@@ -411,7 &#43;411,7 @@
+ 
+ 	if strings.Contains(strings.ToLower(pfmResponse.TransactionType), &#34;international&#34;) ||
+ 		strings.ToLower(pfmResponse.ForeignCurrency) != &#34;inr&#34; {
+-		category &#43;= &#34; International)&#34;
+&#43;		category = &#34; International)&#34;
+ 	} else {
+ 		category &#43;= &#34; Domestic)&#34;
+ 	}
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.5&#34; with checksum d844bdafca0f022c7b87ef9539ceb900
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>arithmetic/assignment</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-2">--- Original
+&#43;&#43;&#43; New
+@@ -413,7 &#43;413,7 @@
+ 		strings.ToLower(pfmResponse.ForeignCurrency) != &#34;inr&#34; {
+ 		category &#43;= &#34; International)&#34;
+ 	} else {
+-		category &#43;= &#34; Domestic)&#34;
+&#43;		category = &#34; Domestic)&#34;
+ 	}
+ 	logger.Infof(&#34;category: %v&#34;, category)
+ 	formattedResponse.Category = category
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.6&#34; with checksum dac9ae52182db39b6705dcff266422db
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>arithmetic/assignment</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-3">--- Original
+&#43;&#43;&#43; New
+@@ -613,7 &#43;613,7 @@
+ 	accountValidationNarrations := []string{&#34;neft&#34;, &#34;rtgs&#34;}
+ 	for _, value := range accountValidationNarrations {
+ 		if strings.HasPrefix(strings.ToLower(pfmResponse.UserNarration), value) {
+-			sfdcRequest.Comments &#43;= fmt.Sprintf(&#34; | Dispute account number is %s and the Correct account number is %s&#34;,
+&#43;			sfdcRequest.Comments = fmt.Sprintf(&#34; | Dispute account number is %s and the Correct account number is %s&#34;,
+ 				markRaiseDisputeRequest.DisputeAccountNumber, markRaiseDisputeRequest.CorrectAccountNumber)
+ 		}
+ 	}
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.7&#34; with checksum 8235899e433d4d5edf022889022a91ef
+</pre>
+      </div>
+      <hr />
+       
+    </div>
+
+    <hr />
+
+    <div id="killed" class="section">
+      <h2>Killed</h2>
+       
+      <div id="escaped-0">
+        <h3>Mutator:</h3>
+        <pre>arithmetic/assign_invert</pre>
+        <h3>Diff:</h3>
+        <div id="diff-killed-0">--- Original
+&#43;&#43;&#43; New
+@@ -393,7 &#43;393,7 @@
+ 	found := false
+ 	for key, network := range cardNetworks {
+ 		if strings.EqualFold(key, upperCardType) {
+-			category &#43;= network
+&#43;			category -= network
+ 			found = true
+ 			break
+ 		}
+</div>
+        <h3>Process Output:</h3>
+        <pre>PASS &#34;/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.0&#34; with checksum 9803680bf31a7b2d3647605abc618232
+</pre>
+      </div>
+      <hr />
+      
+      <div id="escaped-1">
+        <h3>Mutator:</h3>
+        <pre>arithmetic/assign_invert</pre>
+        <h3>Diff:</h3>
+        <div id="diff-killed-1">--- Original
+&#43;&#43;&#43; New
+@@ -411,7 &#43;411,7 @@
+ 
+ 	if strings.Contains(strings.ToLower(pfmResponse.TransactionType), &#34;international&#34;) ||
+ 		strings.ToLower(pfmResponse.ForeignCurrency) != &#34;inr&#34; {
+-		category &#43;= &#34; International)&#34;
+&#43;		category -= &#34; International)&#34;
+ 	} else {
+ 		category &#43;= &#34; Domestic)&#34;
+ 	}
+</div>
+        <h3>Process Output:</h3>
+        <pre>PASS &#34;/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.1&#34; with checksum 94ad46484e2b56a94419626252f6573d
+</pre>
+      </div>
+      <hr />
+      
+      <div id="escaped-2">
+        <h3>Mutator:</h3>
+        <pre>arithmetic/assign_invert</pre>
+        <h3>Diff:</h3>
+        <div id="diff-killed-2">--- Original
+&#43;&#43;&#43; New
+@@ -413,7 &#43;413,7 @@
+ 		strings.ToLower(pfmResponse.ForeignCurrency) != &#34;inr&#34; {
+ 		category &#43;= &#34; International)&#34;
+ 	} else {
+-		category &#43;= &#34; Domestic)&#34;
+&#43;		category -= &#34; Domestic)&#34;
+ 	}
+ 	logger.Infof(&#34;category: %v&#34;, category)
+ 	formattedResponse.Category = category
+</div>
+        <h3>Process Output:</h3>
+        <pre>PASS &#34;/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.2&#34; with checksum 3a108bdeb6fbe702f7f1e6fd1789b163
+</pre>
+      </div>
+      <hr />
+      
+      <div id="escaped-3">
+        <h3>Mutator:</h3>
+        <pre>arithmetic/assign_invert</pre>
+        <h3>Diff:</h3>
+        <div id="diff-killed-3">--- Original
+&#43;&#43;&#43; New
+@@ -613,7 &#43;613,7 @@
+ 	accountValidationNarrations := []string{&#34;neft&#34;, &#34;rtgs&#34;}
+ 	for _, value := range accountValidationNarrations {
+ 		if strings.HasPrefix(strings.ToLower(pfmResponse.UserNarration), value) {
+-			sfdcRequest.Comments &#43;= fmt.Sprintf(&#34; | Dispute account number is %s and the Correct account number is %s&#34;,
+&#43;			sfdcRequest.Comments -= fmt.Sprintf(&#34; | Dispute account number is %s and the Correct account number is %s&#34;,
+ 				markRaiseDisputeRequest.DisputeAccountNumber, markRaiseDisputeRequest.CorrectAccountNumber)
+ 		}
+ 	}
+</div>
+        <h3>Process Output:</h3>
+        <pre>PASS &#34;/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.3&#34; with checksum 5cf4efedbf78d424246baaefd15f0f36
+</pre>
+      </div>
+      <hr />
+      
+      <div id="escaped-4">
+        <h3>Mutator:</h3>
+        <pre>arithmetic/base</pre>
+        <h3>Diff:</h3>
+        <div id="diff-killed-4">--- Original
+&#43;&#43;&#43; New
+@@ -57,7 &#43;57,7 @@
+ 
+ 	val, ok := service.config.GetSubCategoryMapping()[request.SubCategory]
+ 	if ok {
+-		request.DisputeReason = strings.Replace(request.DisputeReason, &#34; &#34;&#43;val, &#34;&#34;, -1)
+&#43;		request.DisputeReason = strings.Replace(request.DisputeReason, &#34; &#34;-val, &#34;&#34;, -1)
+ 	}
+ 	result, categoryValidationError := service.repo.FetchDisputeDetailsByCategorySubCategoryAndReason(ctx, request.Category, request.SubCategory, request.DisputeReason)
+ 
+</div>
+        <h3>Process Output:</h3>
+        <pre>PASS &#34;/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.8&#34; with checksum ce464c06176478b32df470d058cd77eb
+</pre>
+      </div>
+      <hr />
+      
+      <div id="escaped-5">
+        <h3>Mutator:</h3>
+        <pre>arithmetic/base</pre>
+        <h3>Diff:</h3>
+        <div id="diff-killed-5">--- Original
+&#43;&#43;&#43; New
+@@ -133,7 &#43;133,7 @@
+ 		temp.InternalCategory = result[i].InternalCategory
+ 		val, ok := service.config.GetSubCategoryMapping()[temp.SfdcSubCategory]
+ 		if ok {
+-			temp.ReasonForDispute = temp.ReasonForDispute &#43; &#34; &#34; &#43; val
+&#43;			temp.ReasonForDispute = temp.ReasonForDispute &#43; &#34; &#34; - val
+ 		}
+ 		response.DisputeDetails = append(response.DisputeDetails, temp)
+ 	}
+</div>
+        <h3>Process Output:</h3>
+        <pre>PASS &#34;/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.9&#34; with checksum 52db060fdf08a8167028c48cab514aec
+</pre>
+      </div>
+      <hr />
+       
+    </div>
+    <hr />
+    <div id="timeouted" class="section">
+      <h2>Timeouted</h2>
+      
+      <p>No timeouted entries.</p>
+      
+    </div>
+    <hr />
+    <div id="errored" class="section">
+      <h2>Errored</h2>
+      
+      <p>No errored entries.</p>
+      
+    </div>
+    <hr />
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var diffIds = document.querySelectorAll('[id^="diff"]');
+        diffIds.forEach((diff) => {
+          pretifyDiff(diff);
+        });
+      });
+    </script>
+  </body>
+</html>

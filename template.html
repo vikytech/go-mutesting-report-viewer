@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON Visualization</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      .section {
+        margin-bottom: 20px;
+      }
+      h1,
+      h2 {
+        color: #333;
+        text-align: center;
+        font-size: 35px;
+      }
+      p {
+        text-align: center;
+      }
+      pre {
+        background-color: #f4f4f4;
+        padding: 10px;
+        border-radius: 5px;
+        border: #0000007d inset 5px;
+      }
+      .diff {
+        margin-top: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
+      th,
+      td {
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="assets/vendor/css/diff2html.min.css"
+    />
+    <script
+      type="text/javascript"
+      src="assets/vendor/js/diff2html.min.js"
+    ></script>
+    <script>
+      function pretifyDiff(diffSrcElement) {
+        const html = Diff2Html.html(diffSrcElement.innerHTML, {
+          inputFormat: "diff",
+          outputFormat: "line-by-line",
+          matchingMaxComparisons: 25,
+          matchWordsThreshold: 0.35,
+          matching: "lines",
+          highlightLanguages: "go",
+          colorScheme: "auto",
+          drawFileList: false,
+        });
+
+        document.getElementById(diffSrcElement.id).innerHTML = html;
+        return html;
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Mutation Report</h1>
+
+    <div id="stats" class="section">
+      <h2>Stats</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Total Mutants Count</th>
+            <th>Killed Count</th>
+            <th>Not Covered Count</th>
+            <th>Escaped Count</th>
+            <th>Error Count</th>
+            <th>Skipped Count</th>
+            <th>Timeout Count</th>
+            <th>MSI</th>
+            <th>Mutation Code Coverage</th>
+            <th>Covered Code MSI</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ .Stats.TotalMutantsCount }}</td>
+            <td>{{ .Stats.KilledCount }}</td>
+            <td>{{ .Stats.NotCoveredCount }}</td>
+            <td>{{ .Stats.EscapedCount }}</td>
+            <td>{{ .Stats.ErrorCount }}</td>
+            <td>{{ .Stats.SkippedCount }}</td>
+            <td>{{ .Stats.TimeOutCount }}</td>
+            <td>{{ .Stats.Msi }}</td>
+            <td>{{ .Stats.MutationCodeCoverage }}</td>
+            <td>{{ .Stats.CoveredCodeMsi }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <hr />
+    <div id="escaped" class="section">
+      <h2>Escaped</h2>
+      {{ if .Escaped }} {{ range $index, $entry := .Escaped }}
+      <div>
+        <h3>Mutator:</h3>
+        <pre>{{ .Mutator.MutatorName }}</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-{{ $index }}">{{.Diff}}</div>
+        <h3>Process Output:</h3>
+        <pre>{{ .ProcessOutput }}</pre>
+      </div>
+      <hr />
+      {{ else }}
+      <p>No escaped entries available.</p>
+      {{ end }} {{ else }}
+      <p>No escaped entries.</p>
+      {{ end }}
+    </div>
+
+    <hr />
+
+    <div id="killed" class="section">
+      <h2>Killed</h2>
+      {{ if .Killed }} {{ range $index, $entry := .Killed }}
+      <div id="escaped-{{ $index }}">
+        <h3>Mutator:</h3>
+        <pre>{{ .Mutator.MutatorName }}</pre>
+        <h3>Diff:</h3>
+        <div id="diff-killed-{{ $index }}">{{.Diff}}</div>
+        <h3>Process Output:</h3>
+        <pre>{{ .ProcessOutput }}</pre>
+      </div>
+      <hr />
+      {{ else }}
+      <p>No killed entries available.</p>
+      {{ end }} {{ else }}
+      <p>No killed entries.</p>
+      {{ end }}
+    </div>
+    <hr />
+    <div id="timeouted" class="section">
+      <h2>Timeouted</h2>
+      {{ if .Timeouted }}
+      <pre>{{ .Timeouted }}</pre>
+      {{ else }}
+      <p>No timeouted entries.</p>
+      {{ end }}
+    </div>
+    <hr />
+    <div id="errored" class="section">
+      <h2>Errored</h2>
+      {{ if .Errored }}
+      <pre>{{ .Errored }}</pre>
+      {{ else }}
+      <p>No errored entries.</p>
+      {{ end }}
+    </div>
+    <hr />
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var diffIds = document.querySelectorAll('[id^="diff"]');
+        diffIds.forEach((diff) => {
+          pretifyDiff(diff);
+        });
+      });
+    </script>
+  </body>
+</html>
