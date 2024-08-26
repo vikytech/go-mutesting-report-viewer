@@ -76,7 +76,7 @@ func main() {
 	if len(os.Args) > 1 && os.Args[1] == "" {
 		panic("Error: No file path provided.\nUsage: go run go_mutesting_html_report.go -file <PATH_TO_REPORT>")
 	}
-	jsonFilePath := flag.String("file", os.Args[1], "Provide report.json:: -file <PATH_TO_REPORT>")
+	jsonFilePath := flag.String("file", "", "Provide report.json:: -file <PATH_TO_REPORT>")
 	flag.Parse()
 
 	if *jsonFilePath == "" {
