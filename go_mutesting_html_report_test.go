@@ -5,15 +5,12 @@ import (
 	"io"
 	"log"
 	"os"
-	"os/exec"
 	"testing"
 	"text/template"
 )
 
 var osCreate = os.Create
-var osReadFile = os.ReadFile
 var templateParseFiles = template.ParseFiles
-var execCommand = exec.Command
 
 func init() {
 	log.SetOutput(io.Discard)
@@ -37,7 +34,10 @@ func TestReadJson_ValidJson(t *testing.T) {
 	jsonContent := `{
 		"stats": {
 			"totalMutantsCount": 10,
-			"killedCount": 5
+			"killedCount": 5,
+			"msi": 50.0,
+			"extraField": "shouldBeIgnored"
+
 		},
 		"escaped": [],
 		"killed": []
@@ -53,9 +53,11 @@ func TestReadJson_ValidJson(t *testing.T) {
 	if data.Stats.KilledCount != 5 {
 		t.Errorf("Expected 5 KilledCount, got %d", data.Stats.KilledCount)
 	}
+	if data.Stats.Msi != 50.0 {
+		t.Errorf("Expected 50.0 MSI, got %f", data.Stats.Msi)
+	}
 }
 
-// Test readJson with invalid JSON input
 func TestReadJson_InvalidJson(t *testing.T) {
 	jsonContent := `{invalid json}`
 
@@ -63,30 +65,34 @@ func TestReadJson_InvalidJson(t *testing.T) {
 	defer os.Remove(filePath)
 
 	defer func() {
-		if r := recover(); r == nil {
-			t.Errorf("Expected panic due to invalid JSON")
+		if r := recover(); r != nil {
+			if r != "Invalid JSON format: invalid character 'i' looking for beginning of object key string" {
+				t.Errorf("\nExpected:: Invalid JSON format: invalid character 'i' looking for beginning of object key string, Got:: %s", r)
+			}
 		}
 	}()
 
 	readJson(filePath)
 }
 
-// Test readJson with missing file
 func TestReadJson_FileNotFound(t *testing.T) {
 	defer func() {
-		if r := recover(); r == nil {
-			t.Errorf("Expected panic due to missing file")
+		if r := recover(); r != nil {
+			if r != "Error reading file: open nonexistent.json: no such file or directory" {
+				t.Errorf("\nExpected:: Error reading file: open nonexistent.json: no such file or directory, Got:: %s", r)
+			}
 		}
 	}()
 
 	readJson("nonexistent.json")
 }
 
-// Test readJson with no file path provided
 func TestReadJson_NoFilePath(t *testing.T) {
 	defer func() {
-		if r := recover(); r == nil {
-			t.Errorf("Expected panic due to no file path provided")
+		if r := recover(); r != nil {
+			if r != "Error reading file: open : no such file or directory" {
+				t.Errorf("\nExpected:: Error reading file: open : no such file or directory, Got:: %s", r)
+			}
 		}
 	}()
 
@@ -96,7 +102,6 @@ func TestReadJson_NoFilePath(t *testing.T) {
 func TestExecuteTemplate_TemplateParseError(t *testing.T) {
 	data := Data{}
 
-	// Mock template.ParseFiles to return an error
 	templateParseFiles = func(filenames ...string) (*template.Template, error) {
 		return nil, errors.New("mocked parse error")
 	}
@@ -114,7 +119,6 @@ func TestExecuteTemplate_CreateFileError(t *testing.T) {
 	executeTemplate(data)
 }
 
-// Test main with valid arguments
 func TestMain_ValidFile(t *testing.T) {
 	jsonContent := `{
 		"stats": {
@@ -127,6 +131,19 @@ func TestMain_ValidFile(t *testing.T) {
 	filePath := createTempJSONFile(t, jsonContent)
 	defer os.Remove(filePath)
 
-	os.Args = []string{"cmd", filePath}
+	os.Args = []string{"cmd", "-file", filePath}
+	main()
+}
+
+func TestMain_EmptyFilePath(t *testing.T) {
+	defer func() {
+		if r := recover(); r != nil {
+			if r != "Error: No file path provided.\nUsage: go run go_mutesting_html_report.go -file <PATH_TO_REPORT>" {
+				t.Errorf("Error: No file path provided.\nUsage: go run go_mutesting_html_report.go -file <PATH_TO_REPORT>, Got:: %s", r)
+			}
+		}
+	}()
+
+	os.Args = []string{"-file", ""}
 	main()
 }

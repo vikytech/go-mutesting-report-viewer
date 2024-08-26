@@ -46,13 +46,13 @@ type Data struct {
 func readJson(filePath string) Data {
 	jsonData, err := os.ReadFile(filePath)
 	if err != nil {
-		log.Panicf("Error reading file: %s", err)
+		log.Panicf("Error reading file: %s", err.Error())
 	}
 
 	var data Data
 	err = json.Unmarshal(jsonData, &data)
 	if err != nil {
-		log.Panicf("Invalid JSON format: %s", err.Error())
+		panic("Invalid JSON format: " + err.Error())
 	}
 	return data
 }
@@ -62,35 +62,26 @@ func executeTemplate(data Data) {
 	outputReportFilePath := "report.html"
 	report, err := os.Create(outputReportFilePath)
 	if err != nil {
-		log.Panicf("Unable to create report file: %s", err)
-		return
+		panic("Unable to create report file: " + err.Error())
 	}
 
 	err = tmpl.Execute(report, data)
 	if err != nil {
-		log.Panicf("Error executing template: %s", err.Error())
-		return
+		panic("Error executing template: " + err.Error())
 	}
-	// exec.Command("open", outputReportFilePath).Start()
 }
 
 func main() {
-	defer func() {
-		if err := recover(); err != nil {
-			log.Printf("Error occurred: %s", err)
-		}
-	}()
-
-	if len(os.Args) > 1 && os.Args[1] != "" {
-		jsonFilePath := flag.String("file", "", os.Args[1])
-		flag.Parse()
-
-		if *jsonFilePath == "" {
-			panic("Error: No file path provided")
-		}
-		data := readJson(*jsonFilePath)
-		executeTemplate(data)
-		os.Exit(0)
+	log.SetFlags(0)
+	if len(os.Args) > 1 && os.Args[1] == "" {
+		panic("Error: No file path provided.\nUsage: go run go_mutesting_html_report.go -file <PATH_TO_REPORT>")
 	}
-	log.Panicln("Error: No file path provided.\n Usage: go run go_mutesting_html_report.go -file <PATH_TO_REPORT>")
+	jsonFilePath := flag.String("file", os.Args[1], "Provide report.json:: -file <PATH_TO_REPORT>")
+	flag.Parse()
+
+	if *jsonFilePath == "" {
+		panic("Error: No file path provided")
+	}
+	data := readJson(*jsonFilePath)
+	executeTemplate(data)
 }
