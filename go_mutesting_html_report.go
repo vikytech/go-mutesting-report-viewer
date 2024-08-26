@@ -3,11 +3,9 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"fmt"
 	"html/template"
 	"log"
 	"os"
-	"os/exec"
 )
 
 type Mutator struct {
@@ -46,25 +44,15 @@ type Data struct {
 }
 
 func readJson(filePath string) Data {
-	jsonFilePath := flag.String("file", "", filePath)
-	flag.Parse()
-
-	if *jsonFilePath == "" {
-		fmt.Println("Error: No file path provided")
-		os.Exit(1)
-	}
-
-	jsonData, err := os.ReadFile(*jsonFilePath)
+	jsonData, err := os.ReadFile(filePath)
 	if err != nil {
-		fmt.Println("Error reading file:", err)
-		os.Exit(1)
+		log.Panicf("Error reading file: %s", err)
 	}
 
 	var data Data
 	err = json.Unmarshal(jsonData, &data)
 	if err != nil {
-		fmt.Errorf("Invalid JSON format: " + err.Error())
-		os.Exit(1)
+		log.Panicf("Invalid JSON format: %s", err.Error())
 	}
 	return data
 }
@@ -74,24 +62,35 @@ func executeTemplate(data Data) {
 	outputReportFilePath := "report.html"
 	report, err := os.Create(outputReportFilePath)
 	if err != nil {
-		log.Println("Unable to create report file: ", err)
+		log.Panicf("Unable to create report file: %s", err)
 		return
 	}
 
 	err = tmpl.Execute(report, data)
 	if err != nil {
-		fmt.Errorf("Error executing template: " + err.Error())
+		log.Panicf("Error executing template: %s", err.Error())
 		return
 	}
-	exec.Command("open", outputReportFilePath).Start()
+	// exec.Command("open", outputReportFilePath).Start()
 }
 
 func main() {
+	defer func() {
+		if err := recover(); err != nil {
+			log.Printf("Error occurred: %s", err)
+		}
+	}()
+
 	if len(os.Args) > 1 && os.Args[1] != "" {
-		data := readJson(os.Args[1])
+		jsonFilePath := flag.String("file", "", os.Args[1])
+		flag.Parse()
+
+		if *jsonFilePath == "" {
+			panic("Error: No file path provided")
+		}
+		data := readJson(*jsonFilePath)
 		executeTemplate(data)
 		os.Exit(0)
 	}
-	log.Println("Error: No file path provided.\n Usage: go run go_mutesting_html_report.go -file <PATH_TO_REPORT>")
-	os.Exit(1)
+	log.Panicln("Error: No file path provided.\n Usage: go run go_mutesting_html_report.go -file <PATH_TO_REPORT>")
 }
