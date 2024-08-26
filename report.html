@@ -54,7 +54,7 @@
       rel="stylesheet"
       type="text/css"
       href="assets/vendor/css/diff2html.min.css"
-    />    
+    />
     <script
       type="text/javascript"
       src="assets/vendor/js/diff2html-ui.min.js"
@@ -67,11 +67,9 @@
           matchingMaxComparisons: 25,
           matchWordsThreshold: 0.35,
           drawFileList: false,
-          colorScheme: "light"
+          colorScheme: "light",
         });
         html.draw();
-        
-        
       }
     </script>
   </head>
@@ -97,14 +95,14 @@
         </thead>
         <tbody>
           <tr>
-            <td>417</td>
-            <td>160</td>
+            <td>27</td>
+            <td>4</td>
             <td>0</td>
-            <td>257</td>
+            <td>23</td>
             <td>0</td>
             <td>0</td>
             <td>0</td>
-            <td>0.38369304556354916</td>
+            <td>0.14814814814814814</td>
             <td>0</td>
             <td>0</td>
           </tr>
@@ -117,88 +115,510 @@
        
       <div>
         <h3>Mutator:</h3>
-        <pre>arithmetic/assignment</pre>
+        <pre>branch/if</pre>
         <h3>Diff:</h3>
         <div id="diff-escaped-0">--- Original
 &#43;&#43;&#43; New
-@@ -393,7 &#43;393,7 @@
- 	found := false
- 	for key, network := range cardNetworks {
- 		if strings.EqualFold(key, upperCardType) {
--			category &#43;= network
-&#43;			category = network
- 			found = true
- 			break
- 		}
+@@ -47,7 &#43;47,7 @@
+ func readJson(filePath string) Data {
+ 	jsonData, err := os.ReadFile(filePath)
+ 	if err != nil {
+-		log.Panicf(&#34;Error reading file: %s&#34;, err)
+&#43;		_, _ = log.Panicf, err
+ 	}
+ 
+ 	var data Data
 </div>
         <h3>Process Output:</h3>
-        <pre>FAIL &#34;/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.4&#34; with checksum 821490ccbe82a8675692dabddca9de69
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.1&#34; with checksum c590a9cd279a2a634ef0efb6e14b5273
 </pre>
       </div>
       <hr />
       
       <div>
         <h3>Mutator:</h3>
-        <pre>arithmetic/assignment</pre>
+        <pre>branch/if</pre>
         <h3>Diff:</h3>
         <div id="diff-escaped-1">--- Original
 &#43;&#43;&#43; New
-@@ -411,7 &#43;411,7 @@
- 
- 	if strings.Contains(strings.ToLower(pfmResponse.TransactionType), &#34;international&#34;) ||
- 		strings.ToLower(pfmResponse.ForeignCurrency) != &#34;inr&#34; {
--		category &#43;= &#34; International)&#34;
-&#43;		category = &#34; International)&#34;
- 	} else {
- 		category &#43;= &#34; Domestic)&#34;
+@@ -63,8 &#43;63,8 @@
+ 	outputReportFilePath := &#34;report.html&#34;
+ 	report, err := os.Create(outputReportFilePath)
+ 	if err != nil {
+-		log.Println(&#34;Unable to create report file: &#34;, err)
+-		return
+&#43;		_, _ = log.Println, err
+&#43;
  	}
+ 
+ 	err = tmpl.Execute(report, data)
 </div>
         <h3>Process Output:</h3>
-        <pre>FAIL &#34;/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.5&#34; with checksum d844bdafca0f022c7b87ef9539ceb900
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.3&#34; with checksum 285dfecbd7a0d5f3892ed03d53ab01ce
 </pre>
       </div>
       <hr />
       
       <div>
         <h3>Mutator:</h3>
-        <pre>arithmetic/assignment</pre>
+        <pre>branch/if</pre>
         <h3>Diff:</h3>
         <div id="diff-escaped-2">--- Original
 &#43;&#43;&#43; New
-@@ -413,7 &#43;413,7 @@
- 		strings.ToLower(pfmResponse.ForeignCurrency) != &#34;inr&#34; {
- 		category &#43;= &#34; International)&#34;
- 	} else {
--		category &#43;= &#34; Domestic)&#34;
-&#43;		category = &#34; Domestic)&#34;
+@@ -69,8 &#43;69,8 @@
+ 
+ 	err = tmpl.Execute(report, data)
+ 	if err != nil {
+-		fmt.Errorf(&#34;Error executing template: %s&#34; &#43; err.Error())
+-		return
+&#43;		_, _ = fmt.Errorf, err.Error
+&#43;
  	}
- 	logger.Infof(&#34;category: %v&#34;, category)
- 	formattedResponse.Category = category
+ 	// exec.Command(&#34;open&#34;, outputReportFilePath).Start()
+ }
 </div>
         <h3>Process Output:</h3>
-        <pre>FAIL &#34;/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.6&#34; with checksum dac9ae52182db39b6705dcff266422db
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.4&#34; with checksum 6909baeebe4acfe9276ac53968430d07
 </pre>
       </div>
       <hr />
       
       <div>
         <h3>Mutator:</h3>
-        <pre>arithmetic/assignment</pre>
+        <pre>branch/if</pre>
         <h3>Diff:</h3>
         <div id="diff-escaped-3">--- Original
 &#43;&#43;&#43; New
-@@ -613,7 &#43;613,7 @@
- 	accountValidationNarrations := []string{&#34;neft&#34;, &#34;rtgs&#34;}
- 	for _, value := range accountValidationNarrations {
- 		if strings.HasPrefix(strings.ToLower(pfmResponse.UserNarration), value) {
--			sfdcRequest.Comments &#43;= fmt.Sprintf(&#34; | Dispute account number is %s and the Correct account number is %s&#34;,
-&#43;			sfdcRequest.Comments = fmt.Sprintf(&#34; | Dispute account number is %s and the Correct account number is %s&#34;,
- 				markRaiseDisputeRequest.DisputeAccountNumber, markRaiseDisputeRequest.CorrectAccountNumber)
+@@ -78,7 &#43;78,7 @@
+ func main() {
+ 	defer func() {
+ 		if err := recover(); err != nil {
+-			log.Println(&#34;panic occurred:&#34;, err)
+&#43;			_, _ = log.Println, err
  		}
- 	}
+ 	}()
+ 
 </div>
         <h3>Process Output:</h3>
-        <pre>FAIL &#34;/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.7&#34; with checksum 8235899e433d4d5edf022889022a91ef
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.5&#34; with checksum 60a521ac944ecb23fbec88e2f74ced99
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>branch/if</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-4">--- Original
+&#43;&#43;&#43; New
+@@ -87,7 &#43;87,7 @@
+ 		flag.Parse()
+ 
+ 		if *jsonFilePath == &#34;&#34; {
+-			panic(&#34;Error: No file path provided&#34;)
+&#43;
+ 		}
+ 		data := readJson(*jsonFilePath)
+ 		executeTemplate(data)
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.7&#34; with checksum 8526f3a35ab1ee6b4b074f8569dd43c1
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>expression/comparison</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-5">--- Original
+&#43;&#43;&#43; New
+@@ -82,7 &#43;82,7 @@
+ 		}
+ 	}()
+ 
+-	if len(os.Args) &gt; 1 &amp;&amp; os.Args[1] != &#34;&#34; {
+&#43;	if len(os.Args) &gt;= 1 &amp;&amp; os.Args[1] != &#34;&#34; {
+ 		jsonFilePath := flag.String(&#34;file&#34;, &#34;&#34;, os.Args[1])
+ 		flag.Parse()
+ 
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.8&#34; with checksum d570195528fcfb36bda866c35ee1dcc5
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>expression/remove</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-6">--- Original
+&#43;&#43;&#43; New
+@@ -82,7 &#43;82,7 @@
+ 		}
+ 	}()
+ 
+-	if len(os.Args) &gt; 1 &amp;&amp; os.Args[1] != &#34;&#34; {
+&#43;	if true &amp;&amp; os.Args[1] != &#34;&#34; {
+ 		jsonFilePath := flag.String(&#34;file&#34;, &#34;&#34;, os.Args[1])
+ 		flag.Parse()
+ 
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.9&#34; with checksum 60e92b8d59fb55e8de2afa4cc80cec9b
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>expression/remove</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-7">--- Original
+&#43;&#43;&#43; New
+@@ -82,7 &#43;82,7 @@
+ 		}
+ 	}()
+ 
+-	if len(os.Args) &gt; 1 &amp;&amp; os.Args[1] != &#34;&#34; {
+&#43;	if len(os.Args) &gt; 1 &amp;&amp; true {
+ 		jsonFilePath := flag.String(&#34;file&#34;, &#34;&#34;, os.Args[1])
+ 		flag.Parse()
+ 
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.10&#34; with checksum 7c0fe5c3ea5e0a7ff4e653fb0436edc7
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>numbers/decrementer</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-8">--- Original
+&#43;&#43;&#43; New
+@@ -82,7 &#43;82,7 @@
+ 		}
+ 	}()
+ 
+-	if len(os.Args) &gt; 1 &amp;&amp; os.Args[1] != &#34;&#34; {
+&#43;	if len(os.Args) &gt; 0 &amp;&amp; os.Args[1] != &#34;&#34; {
+ 		jsonFilePath := flag.String(&#34;file&#34;, &#34;&#34;, os.Args[1])
+ 		flag.Parse()
+ 
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.11&#34; with checksum 52931236801a7e9c01d86259bc3bfd23
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>numbers/decrementer</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-9">--- Original
+&#43;&#43;&#43; New
+@@ -82,7 &#43;82,7 @@
+ 		}
+ 	}()
+ 
+-	if len(os.Args) &gt; 1 &amp;&amp; os.Args[1] != &#34;&#34; {
+&#43;	if len(os.Args) &gt; 1 &amp;&amp; os.Args[0] != &#34;&#34; {
+ 		jsonFilePath := flag.String(&#34;file&#34;, &#34;&#34;, os.Args[1])
+ 		flag.Parse()
+ 
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.12&#34; with checksum 2f0cb40b4e8d771086b974104eb534a3
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>numbers/decrementer</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-10">--- Original
+&#43;&#43;&#43; New
+@@ -83,7 &#43;83,7 @@
+ 	}()
+ 
+ 	if len(os.Args) &gt; 1 &amp;&amp; os.Args[1] != &#34;&#34; {
+-		jsonFilePath := flag.String(&#34;file&#34;, &#34;&#34;, os.Args[1])
+&#43;		jsonFilePath := flag.String(&#34;file&#34;, &#34;&#34;, os.Args[0])
+ 		flag.Parse()
+ 
+ 		if *jsonFilePath == &#34;&#34; {
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.13&#34; with checksum 6665c91692afd9b29c3e6a5c948824cd
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>numbers/decrementer</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-11">--- Original
+&#43;&#43;&#43; New
+@@ -91,7 &#43;91,7 @@
+ 		}
+ 		data := readJson(*jsonFilePath)
+ 		executeTemplate(data)
+-		os.Exit(0)
+&#43;		os.Exit(-1)
+ 	}
+ 	log.Panicln(&#34;Error: No file path provided.\n Usage: go run go_mutesting_html_report.go -file &lt;PATH_TO_REPORT&gt;&#34;)
+ }
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.14&#34; with checksum 4eb7d880357a97f2a796399b795c355d
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>numbers/incrementer</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-12">--- Original
+&#43;&#43;&#43; New
+@@ -82,7 &#43;82,7 @@
+ 		}
+ 	}()
+ 
+-	if len(os.Args) &gt; 1 &amp;&amp; os.Args[1] != &#34;&#34; {
+&#43;	if len(os.Args) &gt; 2 &amp;&amp; os.Args[1] != &#34;&#34; {
+ 		jsonFilePath := flag.String(&#34;file&#34;, &#34;&#34;, os.Args[1])
+ 		flag.Parse()
+ 
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.15&#34; with checksum 4abb255c1a8ecf8665fd77c0e596ef44
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>numbers/incrementer</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-13">--- Original
+&#43;&#43;&#43; New
+@@ -82,7 &#43;82,7 @@
+ 		}
+ 	}()
+ 
+-	if len(os.Args) &gt; 1 &amp;&amp; os.Args[1] != &#34;&#34; {
+&#43;	if len(os.Args) &gt; 1 &amp;&amp; os.Args[2] != &#34;&#34; {
+ 		jsonFilePath := flag.String(&#34;file&#34;, &#34;&#34;, os.Args[1])
+ 		flag.Parse()
+ 
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.16&#34; with checksum 3951209cb4866ac26140e4e3b03b4ccf
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>numbers/incrementer</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-14">--- Original
+&#43;&#43;&#43; New
+@@ -83,7 &#43;83,7 @@
+ 	}()
+ 
+ 	if len(os.Args) &gt; 1 &amp;&amp; os.Args[1] != &#34;&#34; {
+-		jsonFilePath := flag.String(&#34;file&#34;, &#34;&#34;, os.Args[1])
+&#43;		jsonFilePath := flag.String(&#34;file&#34;, &#34;&#34;, os.Args[2])
+ 		flag.Parse()
+ 
+ 		if *jsonFilePath == &#34;&#34; {
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.17&#34; with checksum cdfde21bcca07099339dca7c7d1dd473
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>numbers/incrementer</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-15">--- Original
+&#43;&#43;&#43; New
+@@ -91,7 &#43;91,7 @@
+ 		}
+ 		data := readJson(*jsonFilePath)
+ 		executeTemplate(data)
+-		os.Exit(0)
+&#43;		os.Exit(1)
+ 	}
+ 	log.Panicln(&#34;Error: No file path provided.\n Usage: go run go_mutesting_html_report.go -file &lt;PATH_TO_REPORT&gt;&#34;)
+ }
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.18&#34; with checksum d0ade9090127ac349b85a7cb5f293bc5
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>statement/remove</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-16">--- Original
+&#43;&#43;&#43; New
+@@ -66,8 &#43;66,7 @@
+ 		log.Println(&#34;Unable to create report file: &#34;, err)
+ 		return
+ 	}
+-
+-	err = tmpl.Execute(report, data)
+&#43;	_, _, _, _ = err, tmpl.Execute, report, data
+ 	if err != nil {
+ 		fmt.Errorf(&#34;Error executing template: %s&#34; &#43; err.Error())
+ 		return
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.22&#34; with checksum a563d3b73a671c294b84154d9981f0e2
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>statement/remove</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-17">--- Original
+&#43;&#43;&#43; New
+@@ -63,7 &#43;63,7 @@
+ 	outputReportFilePath := &#34;report.html&#34;
+ 	report, err := os.Create(outputReportFilePath)
+ 	if err != nil {
+-		log.Println(&#34;Unable to create report file: &#34;, err)
+&#43;		_, _ = log.Println, err
+ 		return
+ 	}
+ 
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.23&#34; with checksum 297d28598f55a0a52359fdf1ff55c988
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>statement/remove</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-18">--- Original
+&#43;&#43;&#43; New
+@@ -69,7 &#43;69,7 @@
+ 
+ 	err = tmpl.Execute(report, data)
+ 	if err != nil {
+-		fmt.Errorf(&#34;Error executing template: %s&#34; &#43; err.Error())
+&#43;		_, _ = fmt.Errorf, err.Error
+ 		return
+ 	}
+ 	// exec.Command(&#34;open&#34;, outputReportFilePath).Start()
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.24&#34; with checksum 1a2b31813a92ca2f0bb2f067d746673f
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>statement/remove</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-19">--- Original
+&#43;&#43;&#43; New
+@@ -93,5 &#43;93,5 @@
+ 		executeTemplate(data)
+ 		os.Exit(0)
+ 	}
+-	log.Panicln(&#34;Error: No file path provided.\n Usage: go run go_mutesting_html_report.go -file &lt;PATH_TO_REPORT&gt;&#34;)
+&#43;	_ = log.Panicln
+ }
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.25&#34; with checksum 069f6888808dd3b71aa51358bc6e9ddd
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>statement/remove</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-20">--- Original
+&#43;&#43;&#43; New
+@@ -84,7 &#43;84,7 @@
+ 
+ 	if len(os.Args) &gt; 1 &amp;&amp; os.Args[1] != &#34;&#34; {
+ 		jsonFilePath := flag.String(&#34;file&#34;, &#34;&#34;, os.Args[1])
+-		flag.Parse()
+&#43;		_ = flag.Parse
+ 
+ 		if *jsonFilePath == &#34;&#34; {
+ 			panic(&#34;Error: No file path provided&#34;)
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.27&#34; with checksum 30b2b22bb134d16560480be8b454e3e2
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>statement/remove</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-21">--- Original
+&#43;&#43;&#43; New
+@@ -90,7 &#43;90,8 @@
+ 			panic(&#34;Error: No file path provided&#34;)
+ 		}
+ 		data := readJson(*jsonFilePath)
+-		executeTemplate(data)
+&#43;		_ = data
+&#43;
+ 		os.Exit(0)
+ 	}
+ 	log.Panicln(&#34;Error: No file path provided.\n Usage: go run go_mutesting_html_report.go -file &lt;PATH_TO_REPORT&gt;&#34;)
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.28&#34; with checksum 6439c71d682e52e89cd515680b43fae4
+</pre>
+      </div>
+      <hr />
+      
+      <div>
+        <h3>Mutator:</h3>
+        <pre>statement/remove</pre>
+        <h3>Diff:</h3>
+        <div id="diff-escaped-22">--- Original
+&#43;&#43;&#43; New
+@@ -91,7 &#43;91,7 @@
+ 		}
+ 		data := readJson(*jsonFilePath)
+ 		executeTemplate(data)
+-		os.Exit(0)
+&#43;		_ = os.Exit
+ 	}
+ 	log.Panicln(&#34;Error: No file path provided.\n Usage: go run go_mutesting_html_report.go -file &lt;PATH_TO_REPORT&gt;&#34;)
+ }
+</div>
+        <h3>Process Output:</h3>
+        <pre>FAIL &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.29&#34; with checksum 958dfd7ee7bf4248ca4f38dae64686c5
 </pre>
       </div>
       <hr />
@@ -212,132 +632,97 @@
        
       <div id="escaped-0">
         <h3>Mutator:</h3>
-        <pre>arithmetic/assign_invert</pre>
+        <pre>arithmetic/base</pre>
         <h3>Diff:</h3>
         <div id="diff-killed-0">--- Original
 &#43;&#43;&#43; New
-@@ -393,7 &#43;393,7 @@
- 	found := false
- 	for key, network := range cardNetworks {
- 		if strings.EqualFold(key, upperCardType) {
--			category &#43;= network
-&#43;			category -= network
- 			found = true
- 			break
- 		}
+@@ -69,7 &#43;69,7 @@
+ 
+ 	err = tmpl.Execute(report, data)
+ 	if err != nil {
+-		fmt.Errorf(&#34;Error executing template: %s&#34; &#43; err.Error())
+&#43;		fmt.Errorf(&#34;Error executing template: %s&#34; - err.Error())
+ 		return
+ 	}
+ 	// exec.Command(&#34;open&#34;, outputReportFilePath).Start()
 </div>
         <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.0&#34; with checksum 9803680bf31a7b2d3647605abc618232
+        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.0&#34; with checksum ea92abe5c1dac2f6c5f4234eba730562
 </pre>
       </div>
       <hr />
       
       <div id="escaped-1">
         <h3>Mutator:</h3>
-        <pre>arithmetic/assign_invert</pre>
+        <pre>branch/if</pre>
         <h3>Diff:</h3>
         <div id="diff-killed-1">--- Original
 &#43;&#43;&#43; New
-@@ -411,7 &#43;411,7 @@
- 
- 	if strings.Contains(strings.ToLower(pfmResponse.TransactionType), &#34;international&#34;) ||
- 		strings.ToLower(pfmResponse.ForeignCurrency) != &#34;inr&#34; {
--		category &#43;= &#34; International)&#34;
-&#43;		category -= &#34; International)&#34;
- 	} else {
- 		category &#43;= &#34; Domestic)&#34;
+@@ -53,7 &#43;53,7 @@
+ 	var data Data
+ 	err = json.Unmarshal(jsonData, &amp;data)
+ 	if err != nil {
+-		log.Panicf(&#34;Invalid JSON format: %s&#34;, err.Error())
+&#43;		_, _ = log.Panicf, err.Error
  	}
+ 	return data
+ }
 </div>
         <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.1&#34; with checksum 94ad46484e2b56a94419626252f6573d
+        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.2&#34; with checksum dcd9c270a997bc819469d9bc4a113622
 </pre>
       </div>
       <hr />
       
       <div id="escaped-2">
         <h3>Mutator:</h3>
-        <pre>arithmetic/assign_invert</pre>
+        <pre>branch/if</pre>
         <h3>Diff:</h3>
         <div id="diff-killed-2">--- Original
 &#43;&#43;&#43; New
-@@ -413,7 &#43;413,7 @@
- 		strings.ToLower(pfmResponse.ForeignCurrency) != &#34;inr&#34; {
- 		category &#43;= &#34; International)&#34;
- 	} else {
--		category &#43;= &#34; Domestic)&#34;
-&#43;		category -= &#34; Domestic)&#34;
+@@ -83,15 &#43;83,8 @@
+ 	}()
+ 
+ 	if len(os.Args) &gt; 1 &amp;&amp; os.Args[1] != &#34;&#34; {
+-		jsonFilePath := flag.String(&#34;file&#34;, &#34;&#34;, os.Args[1])
+-		flag.Parse()
+-
+-		if *jsonFilePath == &#34;&#34; {
+-			panic(&#34;Error: No file path provided&#34;)
+-		}
+-		data := readJson(*jsonFilePath)
+-		executeTemplate(data)
+-		os.Exit(0)
+&#43;		_, _, _, _, _, _, _, _, _ = jsonFilePath, flag.String, os.Args{},
+&#43;			flag.Parse, jsonFilePath, data, jsonFilePath, data, os.Exit
  	}
- 	logger.Infof(&#34;category: %v&#34;, category)
- 	formattedResponse.Category = category
+ 	log.Panicln(&#34;Error: No file path provided.\n Usage: go run go_mutesting_html_report.go -file &lt;PATH_TO_REPORT&gt;&#34;)
+ }
 </div>
         <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.2&#34; with checksum 3a108bdeb6fbe702f7f1e6fd1789b163
+        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.6&#34; with checksum a39706aa6127473a88d0a9c741a27b1b
 </pre>
       </div>
       <hr />
       
       <div id="escaped-3">
         <h3>Mutator:</h3>
-        <pre>arithmetic/assign_invert</pre>
+        <pre>statement/remove</pre>
         <h3>Diff:</h3>
         <div id="diff-killed-3">--- Original
 &#43;&#43;&#43; New
-@@ -613,7 &#43;613,7 @@
- 	accountValidationNarrations := []string{&#34;neft&#34;, &#34;rtgs&#34;}
- 	for _, value := range accountValidationNarrations {
- 		if strings.HasPrefix(strings.ToLower(pfmResponse.UserNarration), value) {
--			sfdcRequest.Comments &#43;= fmt.Sprintf(&#34; | Dispute account number is %s and the Correct account number is %s&#34;,
-&#43;			sfdcRequest.Comments -= fmt.Sprintf(&#34; | Dispute account number is %s and the Correct account number is %s&#34;,
- 				markRaiseDisputeRequest.DisputeAccountNumber, markRaiseDisputeRequest.CorrectAccountNumber)
- 		}
+@@ -51,7 &#43;51,7 @@
  	}
-</div>
-        <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.3&#34; with checksum 5cf4efedbf78d424246baaefd15f0f36
-</pre>
-      </div>
-      <hr />
-      
-      <div id="escaped-4">
-        <h3>Mutator:</h3>
-        <pre>arithmetic/base</pre>
-        <h3>Diff:</h3>
-        <div id="diff-killed-4">--- Original
-&#43;&#43;&#43; New
-@@ -57,7 &#43;57,7 @@
  
- 	val, ok := service.config.GetSubCategoryMapping()[request.SubCategory]
- 	if ok {
--		request.DisputeReason = strings.Replace(request.DisputeReason, &#34; &#34;&#43;val, &#34;&#34;, -1)
-&#43;		request.DisputeReason = strings.Replace(request.DisputeReason, &#34; &#34;-val, &#34;&#34;, -1)
- 	}
- 	result, categoryValidationError := service.repo.FetchDisputeDetailsByCategorySubCategoryAndReason(ctx, request.Category, request.SubCategory, request.DisputeReason)
- 
-</div>
-        <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.8&#34; with checksum ce464c06176478b32df470d058cd77eb
-</pre>
-      </div>
-      <hr />
-      
-      <div id="escaped-5">
-        <h3>Mutator:</h3>
-        <pre>arithmetic/base</pre>
-        <h3>Diff:</h3>
-        <div id="diff-killed-5">--- Original
-&#43;&#43;&#43; New
-@@ -133,7 &#43;133,7 @@
- 		temp.InternalCategory = result[i].InternalCategory
- 		val, ok := service.config.GetSubCategoryMapping()[temp.SfdcSubCategory]
- 		if ok {
--			temp.ReasonForDispute = temp.ReasonForDispute &#43; &#34; &#34; &#43; val
-&#43;			temp.ReasonForDispute = temp.ReasonForDispute &#43; &#34; &#34; - val
- 		}
- 		response.DisputeDetails = append(response.DisputeDetails, temp)
+ 	var data Data
+-	err = json.Unmarshal(jsonData, &amp;data)
+&#43;	_, _, _, _ = err, json.Unmarshal, jsonData, data
+ 	if err != nil {
+ 		log.Panicf(&#34;Invalid JSON format: %s&#34;, err.Error())
  	}
 </div>
         <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3604324096/services/dispute-details_service.go.9&#34; with checksum 52db060fdf08a8167028c48cab514aec
+        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2547207873/go_mutesting_html_report.go.19&#34; with checksum b5b317243f5d7bf15ddeba26a9e3ca16
 </pre>
       </div>
       <hr />
