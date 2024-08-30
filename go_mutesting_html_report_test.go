@@ -1,20 +1,15 @@
 package main
 
 import (
-	"errors"
-	"io"
 	"log"
 	"os"
+	"strings"
 	"testing"
-	"text/template"
 )
 
 var osCreate = os.Create
-var templateParseFiles = template.ParseFiles
 
 func setupSuite(tb testing.TB, teardown func(tb testing.TB)) {
-	osCreate = os.Create
-	templateParseFiles = template.ParseFiles
 	log.Println("Setup suite")
 	defer teardown(tb)
 
@@ -32,22 +27,25 @@ func teardownSuite(tb testing.TB) {
 }
 
 func init() {
-	log.SetOutput(io.Discard)
+	// log.SetOutput(io.Discard)
 }
 
-func createTempJSONFile(t *testing.T, content string) string {
-	setupSuite(t, teardownSuite)
-	tempFile, err := os.CreateTemp("", "*.json")
+func writeContent(t *testing.T, tempFile *os.File, content string) {
+	file, _ := os.OpenFile(tempFile.Name(), os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	if _, err := file.WriteString(content); err != nil {
+		t.Fatal(err)
+	}
+	defer file.Close()
+}
+
+func createTempFile(t *testing.T, fileNamePattern string) *os.File {
+	tempFile, err := os.CreateTemp("/tmp", fileNamePattern)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer tempFile.Close()
 
-	if _, err := tempFile.WriteString(content); err != nil {
-		t.Fatal(err)
-	}
-
-	return tempFile.Name()
+	return tempFile
 }
 
 func TestMain(t *testing.T) {
@@ -61,24 +59,12 @@ func TestMain(t *testing.T) {
 			"escaped": [],
 			"killed": []
 		}`
-		filePath := createTempJSONFile(t, jsonContent)
+		file := createTempFile(t, "*.json")
+		filePath := file.Name()
+		writeContent(t, file, jsonContent)
 		defer os.Remove(filePath)
 
 		os.Args = []string{"cmd", "-file", filePath}
-		main()
-	})
-
-	t.Run("TestMain_EmptyFilePath", func(t *testing.T) {
-		setupSuite(t, teardownSuite)
-		defer func() {
-			if r := recover(); r != nil {
-				if r != "Error: No file path provided.\nUsage: go run go_mutesting_html_report.go -file <PATH_TO_REPORT>" {
-					t.Errorf("Expected:: Error: No file path provided.\nUsage: go run go_mutesting_html_report.go -file <PATH_TO_REPORT>, Got:: %s", r)
-				}
-			}
-		}()
-
-		os.Args = []string{"-file", ""}
 		main()
 	})
 
@@ -112,7 +98,9 @@ func TestReadJSON(t *testing.T) {
 		"killed": []
 	}`
 
-		filePath := createTempJSONFile(t, jsonContent)
+		file := createTempFile(t, "*.json")
+		filePath := file.Name()
+		writeContent(t, file, jsonContent)
 		defer os.Remove(filePath)
 
 		data := readJson(filePath)
@@ -130,7 +118,9 @@ func TestReadJSON(t *testing.T) {
 		setupSuite(t, teardownSuite)
 		jsonContent := `{invalid json}`
 
-		filePath := createTempJSONFile(t, jsonContent)
+		file := createTempFile(t, "*.json")
+		filePath := file.Name()
+		writeContent(t, file, jsonContent)
 		defer os.Remove(filePath)
 
 		defer func() {
@@ -173,25 +163,112 @@ func TestReadJSON(t *testing.T) {
 }
 
 func TestExecuteTemplate(t *testing.T) {
-	t.Run("TestExecuteTemplate_TemplateParseError", func(t *testing.T) {
+
+	t.Run("TestExecuteTemplateUnableToReadTemplate", func(t *testing.T) {
 		setupSuite(t, teardownSuite)
 		data := Data{}
 
-		templateParseFiles = func(filenames ...string) (*template.Template, error) {
-			return nil, errors.New("mocked parse error")
-		}
+		expectedError := "Unable to parse template file: open testTemplate.html: no such file or directory"
 
-		executeTemplate(data)
+		defer func() {
+			if r := recover(); r != nil {
+				if r != expectedError {
+					t.Errorf("\nExpected:: %s, Got:: %s", expectedError, r)
+				}
+			}
+		}()
+
+		executeTemplate(data, "testTemplate.html", "/unknowpath/testOutput.html")
 	})
 
-	t.Run("TestExecuteTemplate_CreateFileError", func(t *testing.T) {
+	t.Run("TestExecuteTemplateUnableToCreateReportFile", func(t *testing.T) {
 		setupSuite(t, teardownSuite)
+		tempTemplateFile := createTempFile(t, "testTemplate.html")
+
+		defer func() {
+			if err := os.Remove(tempTemplateFile.Name()); err != nil {
+				t.Errorf("Failed to remove temporary template file: %v", err)
+			}
+		}()
+
 		data := Data{}
 
-		osCreate = func(name string) (*os.File, error) {
-			return nil, errors.New("mocked create error")
-		}
+		expectedError := "Unable to create report file: open /unknowpath/testOutput.html: no such file or directory"
 
-		executeTemplate(data)
+		defer func() {
+			if r := recover(); r != nil {
+				if r != expectedError {
+					t.Errorf("\nExpected:: %s, Got:: %s", expectedError, r)
+				}
+			}
+		}()
+
+		executeTemplate(data, tempTemplateFile.Name(), "/unknowpath/testOutput.html")
+	})
+
+	t.Run("TestUnableToParseTemplate", func(t *testing.T) {
+		setupSuite(t, teardownSuite)
+		tempTemplateFile := createTempFile(t, "testTemplate*.html")
+		tempTemplateFileName := tempTemplateFile.Name()
+		reportOutputPath := "/tmp/testOutput.html"
+
+		writeContent(t, tempTemplateFile, `{{define "doesnotexist"}the missing piece{{end}}`)
+
+		defer func() {
+			if err := os.Remove(tempTemplateFile.Name()); err != nil {
+				t.Errorf("Failed to remove temporary template file: %v", err)
+			}
+			if _, err := os.Stat(reportOutputPath); err == nil {
+				if err := os.Remove(reportOutputPath); err != nil {
+					t.Errorf("Failed to remove temporary test output file: %v", err)
+				}
+			}
+		}()
+
+		data := Data{}
+
+		expectedError := "Unable to parse template file: template: " + strings.Split(tempTemplateFileName, "/")[2] + ":1: unexpected \"}\" in define clause"
+
+		defer func() {
+			r := recover()
+			if r == nil {
+				t.Error("\nExpected Error, but test passed")
+			} else if r != expectedError {
+				t.Errorf("\nExpected:: %s, Got:: %s", expectedError, r)
+			}
+		}()
+
+		executeTemplate(data, tempTemplateFileName, reportOutputPath)
+	})
+
+	t.Run("TestShouldBeAbleToExecuteTemplate", func(t *testing.T) {
+		setupSuite(t, teardownSuite)
+		tempTemplateFile := createTempFile(t, "testTemplate*.html")
+		tempTemplateFileName := tempTemplateFile.Name()
+		reportOutputPath := "/tmp/testOutput.html"
+
+		writeContent(t, tempTemplateFile, `{{define "value"}}something{{end}}`)
+
+		defer func() {
+			if err := os.Remove(tempTemplateFile.Name()); err != nil {
+				t.Errorf("Failed to remove temporary template file: %v", err)
+			}
+			if _, err := os.Stat(reportOutputPath); err == nil {
+				if err := os.Remove(reportOutputPath); err != nil {
+					t.Errorf("Failed to remove temporary test output file: %v", err)
+				}
+			}
+		}()
+
+		data := Data{}
+
+		defer func() {
+			r := recover()
+			if r != nil {
+				t.Errorf("\nExpected test to pass, but threw error: %s", r)
+			}
+		}()
+
+		executeTemplate(data, tempTemplateFileName, reportOutputPath)
 	})
 }

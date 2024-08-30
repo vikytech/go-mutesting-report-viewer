@@ -57,15 +57,21 @@ func readJson(filePath string) Data {
 	return data
 }
 
-func executeTemplate(data Data) {
-	tmpl := template.Must(template.ParseFiles("template.html"))
-	outputReportFilePath := "report.html"
+func executeTemplate(data Data, templatePath string, outputReportFilePath string) {
+	parsedTemplate, err := template.ParseFiles(templatePath)
+
+	if err != nil {
+		panic("Unable to parse template file: " + err.Error())
+	}
+
+	template := template.Must(parsedTemplate, err)
+
 	report, err := os.Create(outputReportFilePath)
 	if err != nil {
 		panic("Unable to create report file: " + err.Error())
 	}
 
-	err = tmpl.Execute(report, data)
+	err = template.Execute(report, data)
 	if err != nil {
 		panic("Error executing template: " + err.Error())
 	}
@@ -73,15 +79,12 @@ func executeTemplate(data Data) {
 
 func main() {
 	log.SetFlags(0)
-	if len(os.Args) > 1 && os.Args[1] == "" {
-		panic("Error: No file path provided.\nUsage: go run go_mutesting_html_report.go -file <PATH_TO_REPORT>")
-	}
-	jsonFilePath := flag.String("file", "", "Provide report.json:: -file <PATH_TO_REPORT>")
+
+	jsonFilePath := flag.String("file", "report.json", "Provide report.json:: -file <PATH_TO_JSON_REPORT>")
+	templatePath := flag.String("template", "template.html", "Provide template path:: -template <PATH_TO_TEMPLATE>")
+	reportPath := flag.String("out", "report.html", "Provide report output path:: -out <PATH_TO_OUTPUT_HTML_REPORT>")
 	flag.Parse()
 
-	if *jsonFilePath == "" {
-		panic("Error: No file path provided")
-	}
 	data := readJson(*jsonFilePath)
-	executeTemplate(data)
+	executeTemplate(data, *templatePath, *reportPath)
 }
