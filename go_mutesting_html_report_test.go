@@ -1,13 +1,12 @@
 package main
 
 import (
+	"io"
 	"log"
 	"os"
 	"strings"
 	"testing"
 )
-
-var osCreate = os.Create
 
 func setupSuite(tb testing.TB, teardown func(tb testing.TB)) {
 	log.Println("Setup suite")
@@ -17,8 +16,6 @@ func setupSuite(tb testing.TB, teardown func(tb testing.TB)) {
 
 func teardownSuite(tb testing.TB) {
 	log.Println("Teardown suite", os.Args)
-	os.Args = []string{}
-
 	defer func() {
 		if r := recover(); r != nil {
 			tb.Errorf("Error:: %s", r)
@@ -27,7 +24,7 @@ func teardownSuite(tb testing.TB) {
 }
 
 func init() {
-	// log.SetOutput(io.Discard)
+	log.SetOutput(io.Discard)
 }
 
 func writeContent(t *testing.T, tempFile *os.File, content string) {
@@ -66,20 +63,6 @@ func TestMain(t *testing.T) {
 
 		os.Args = []string{"cmd", "-file", filePath}
 		main()
-	})
-
-	t.Run("TestMain_NoFilePath", func(t *testing.T) {
-		setupSuite(t, teardownSuite)
-		defer func() {
-			if r := recover(); r != nil {
-				if r != "Error: No file path provided" {
-					t.Errorf("Expected:: Error: No file path provided, Got:: %s", r)
-				}
-			}
-		}()
-
-		os.Args = []string{"cmd", "-file", ""}
-		// main()
 	})
 }
 
@@ -124,9 +107,13 @@ func TestReadJSON(t *testing.T) {
 		defer os.Remove(filePath)
 
 		defer func() {
-			if r := recover(); r != nil {
-				if r != "Invalid JSON format: invalid character 'i' looking for beginning of object key string" {
-					t.Errorf("\nExpected:: Invalid JSON format: invalid character 'i' looking for beginning of object key string, Got:: %s", r)
+			expectedError := "Invalid JSON format: invalid character 'i' looking for beginning of object key string"
+			r := recover()
+			if r == nil {
+				t.Error("\nExpected Error, but test passed")
+			} else if r != nil {
+				if r != expectedError {
+					t.Errorf("\nExpected:: %s, Got:: %s", expectedError, r)
 				}
 			}
 		}()
@@ -137,9 +124,13 @@ func TestReadJSON(t *testing.T) {
 	t.Run("TestReadJson_FileNotFound", func(t *testing.T) {
 		setupSuite(t, teardownSuite)
 		defer func() {
-			if r := recover(); r != nil {
-				if r != "Error reading file: open nonexistent.json: no such file or directory" {
-					t.Errorf("\nExpected:: Error reading file: open nonexistent.json: no such file or directory, Got:: %s", r)
+			expectedError := "Error reading file: open nonexistent.json: no such file or directory"
+			r := recover()
+			if r == nil {
+				t.Error("\nExpected Error, but test passed")
+			} else if r != nil {
+				if r != expectedError {
+					t.Errorf("\nExpected:: %s, Got:: %s", expectedError, r)
 				}
 			}
 		}()
@@ -150,9 +141,13 @@ func TestReadJSON(t *testing.T) {
 	t.Run("TestReadJson_NoFilePath", func(t *testing.T) {
 		setupSuite(t, teardownSuite)
 		defer func() {
-			if r := recover(); r != nil {
-				if r != "Error reading file: open : no such file or directory" {
-					t.Errorf("\nExpected:: Error reading file: open : no such file or directory, Got:: %s", r)
+			expectedError := "Error reading file: open : no such file or directory"
+			r := recover()
+			if r == nil {
+				t.Error("\nExpected Error, but test passed")
+			} else if r != nil {
+				if r != expectedError {
+					t.Errorf("\nExpected:: %s, Got:: %s", expectedError, r)
 				}
 			}
 		}()
@@ -168,10 +163,12 @@ func TestExecuteTemplate(t *testing.T) {
 		setupSuite(t, teardownSuite)
 		data := Data{}
 
-		expectedError := "Unable to parse template file: open testTemplate.html: no such file or directory"
-
 		defer func() {
-			if r := recover(); r != nil {
+			expectedError := "Unable to parse template file: open testTemplate.html: no such file or directory"
+			r := recover()
+			if r == nil {
+				t.Error("\nExpected Error, but test passed")
+			} else if r != nil {
 				if r != expectedError {
 					t.Errorf("\nExpected:: %s, Got:: %s", expectedError, r)
 				}
@@ -193,10 +190,12 @@ func TestExecuteTemplate(t *testing.T) {
 
 		data := Data{}
 
-		expectedError := "Unable to create report file: open /unknowpath/testOutput.html: no such file or directory"
-
 		defer func() {
-			if r := recover(); r != nil {
+			expectedError := "Unable to create report file: open /unknowpath/testOutput.html: no such file or directory"
+			r := recover()
+			if r == nil {
+				t.Error("\nExpected Error, but test passed")
+			} else if r != nil {
 				if r != expectedError {
 					t.Errorf("\nExpected:: %s, Got:: %s", expectedError, r)
 				}
@@ -247,7 +246,7 @@ func TestExecuteTemplate(t *testing.T) {
 		tempTemplateFileName := tempTemplateFile.Name()
 		reportOutputPath := "/tmp/testOutput.html"
 
-		writeContent(t, tempTemplateFile, `{{define "value"}}something{{end}}`)
+		writeContent(t, tempTemplateFile, `<html><body> something {{define "value"}}more something{{end}}<body><html>`)
 
 		defer func() {
 			if err := os.Remove(tempTemplateFile.Name()); err != nil {
@@ -270,5 +269,11 @@ func TestExecuteTemplate(t *testing.T) {
 		}()
 
 		executeTemplate(data, tempTemplateFileName, reportOutputPath)
+		fileContent, _ := os.ReadFile(reportOutputPath)
+
+		expectedOutput := "<html><body> something <body><html>"
+		if string(fileContent) != expectedOutput {
+			t.Errorf("Report File content not matched\nExpected:: %s\nActual::%s", expectedOutput, fileContent)
+		}
 	})
 }

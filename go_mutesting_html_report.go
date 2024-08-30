@@ -78,8 +78,6 @@ func executeTemplate(data Data, templatePath string, outputReportFilePath string
 }
 
 func main() {
-	log.SetFlags(0)
-
 	jsonFilePath := flag.String("file", "report.json", "Provide report.json:: -file <PATH_TO_JSON_REPORT>")
 	templatePath := flag.String("template", "template.html", "Provide template path:: -template <PATH_TO_TEMPLATE>")
 	reportPath := flag.String("out", "report.html", "Provide report output path:: -out <PATH_TO_OUTPUT_HTML_REPORT>")
