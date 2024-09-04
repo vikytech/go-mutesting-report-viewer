@@ -59,10 +59,43 @@ func TestMain(t *testing.T) {
 		file := createTempFile(t, "*.json")
 		filePath := file.Name()
 		writeContent(t, file, jsonContent)
-		defer os.Remove(filePath)
 
-		os.Args = []string{"cmd", "-file", filePath}
+		tempTemplateFile := createTempFile(t, "testTemplate*.html")
+		tempTemplateFileName := tempTemplateFile.Name()
+		reportOutputPath := "/tmp/testOutput.html"
+
+		writeContent(t, tempTemplateFile, `<html><body> Total Mutant: {{ .Stats.TotalMutantsCount}} | Killed Count: {{ .Stats.KilledCount}} <body><html>`)
+
+		defer func() {
+			r := recover()
+			if r != nil {
+				t.Errorf("\nExpected test to pass, but threw error: %s", r)
+			}
+
+			if err := os.Remove(tempTemplateFileName); err != nil {
+				t.Errorf("Failed to remove temporary template file: %v", err)
+			}
+
+			if _, err := os.Stat(reportOutputPath); err == nil {
+				if err := os.Remove(reportOutputPath); err != nil {
+					t.Errorf("Failed to remove temporary test output file: %v", err)
+				}
+			}
+
+			if err := os.Remove(filePath); err != nil {
+				t.Errorf("Failed to remove temporary json file: %v", err)
+			}
+		}()
+
+		os.Args = []string{"cmd", "-file", filePath, "-out", reportOutputPath, "-template", tempTemplateFileName}
 		main()
+
+		fileContent, _ := os.ReadFile(reportOutputPath)
+
+		expectedOutput := "<html><body> Total Mutant: 10 | Killed Count: 5 <body><html>"
+		if string(fileContent) != expectedOutput {
+			t.Errorf("Report File content not matched\nExpected:: %s\nActual::%s", expectedOutput, fileContent)
+		}
 	})
 }
 
@@ -227,6 +260,42 @@ func TestExecuteTemplate(t *testing.T) {
 		data := Data{}
 
 		expectedError := "Unable to parse template file: template: " + strings.Split(tempTemplateFileName, "/")[2] + ":1: unexpected \"}\" in define clause"
+
+		defer func() {
+			r := recover()
+			if r == nil {
+				t.Error("\nExpected Error, but test passed")
+			} else if r != expectedError {
+				t.Errorf("\nExpected:: %s, Got:: %s", expectedError, r)
+			}
+		}()
+
+		executeTemplate(data, tempTemplateFileName, reportOutputPath)
+	})
+
+	t.Run("TestUnableToExecuteTemplate", func(t *testing.T) {
+		setupSuite(t, teardownSuite)
+		tempTemplateFile := createTempFile(t, "testTemplate*.html")
+		tempTemplateFileName := tempTemplateFile.Name()
+		reportOutputPath := "/tmp/testOutput.html"
+
+		writeContent(t, tempTemplateFile, `<html><body> something {{ .Stats.totalMutantsCount}} <body><html>`)
+
+		defer func() {
+			if err := os.Remove(tempTemplateFile.Name()); err != nil {
+				t.Errorf("Failed to remove temporary template file: %v", err)
+			}
+			if _, err := os.Stat(reportOutputPath); err == nil {
+				if err := os.Remove(reportOutputPath); err != nil {
+					t.Errorf("Failed to remove temporary test output file: %v", err)
+				}
+			}
+		}()
+
+		data := Data{Stats: Stats{TotalMutantsCount: 10}}
+
+		testTemplateFileName := strings.Split(tempTemplateFileName, "/")[2]
+		expectedError := "Error executing template: template: " + testTemplateFileName + ":1:32: executing \"" + testTemplateFileName + "\" at <.Stats.totalMutantsCount>: can't evaluate field totalMutantsCount in type main.Stats"
 
 		defer func() {
 			r := recover()
