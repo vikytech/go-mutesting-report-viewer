@@ -1,12 +1,16 @@
 package main
 
 import (
+	"embed"
 	"encoding/json"
 	"flag"
 	"html/template"
 	"log"
 	"os"
 )
+
+//go:embed report.tmpl report_test.tmpl report_test_execute_error.tmpl report_test_parse_error.tmpl
+var reportTmplFS embed.FS
 
 type Mutator struct {
 	MutatorName        string `json:"mutatorName"`
@@ -58,8 +62,7 @@ func readJson(filePath string) Data {
 }
 
 func executeTemplate(data Data, templatePath string, outputReportFilePath string) {
-	parsedTemplate, err := template.ParseFiles(templatePath)
-
+	parsedTemplate, err := template.ParseFS(reportTmplFS, templatePath)
 	if err != nil {
 		panic("Unable to parse template file: " + err.Error())
 	}
