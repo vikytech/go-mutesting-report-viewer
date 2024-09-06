@@ -1,0 +1,13 @@
+mode: set
+github.com/vikytech/go-mutesting-report-viewer/go_mutesting_html_report.go:50.37,52.16 2 1
+github.com/vikytech/go-mutesting-report-viewer/go_mutesting_html_report.go:52.16,54.3 1 1
+github.com/vikytech/go-mutesting-report-viewer/go_mutesting_html_report.go:56.2,58.16 3 1
+github.com/vikytech/go-mutesting-report-viewer/go_mutesting_html_report.go:58.16,59.47 1 1
+github.com/vikytech/go-mutesting-report-viewer/go_mutesting_html_report.go:61.2,61.13 1 1
+github.com/vikytech/go-mutesting-report-viewer/go_mutesting_html_report.go:64.83,66.16 2 1
+github.com/vikytech/go-mutesting-report-viewer/go_mutesting_html_report.go:66.16,67.57 1 1
+github.com/vikytech/go-mutesting-report-viewer/go_mutesting_html_report.go:70.2,73.16 3 1
+github.com/vikytech/go-mutesting-report-viewer/go_mutesting_html_report.go:73.16,74.56 1 1
+github.com/vikytech/go-mutesting-report-viewer/go_mutesting_html_report.go:77.2,78.16 2 1
+github.com/vikytech/go-mutesting-report-viewer/go_mutesting_html_report.go:78.16,79.52 1 1
+github.com/vikytech/go-mutesting-report-viewer/go_mutesting_html_report.go:83.13,91.2 6 1
