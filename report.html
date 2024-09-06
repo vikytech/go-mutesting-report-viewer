@@ -138,7 +138,7 @@
         <h3>Diff:</h3>
         <div id="diff-killed-0">--- Original
 &#43;&#43;&#43; New
-@@ -52,7 &#43;52,7 @@
+@@ -56,7 &#43;56,7 @@
  	var data Data
  	err = json.Unmarshal(jsonData, &amp;data)
  	if err != nil {
@@ -149,7 +149,7 @@
  }
 </div>
         <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-3295575537/./go_mutesting_html_report.go.0&#34; with checksum 4a1ea032766ab2447f16bdaa180ce114
+        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.0&#34; with checksum 05543503570d7a1094e57db951b91f4d
 </pre>
       </div>
       <hr />
@@ -160,9 +160,9 @@
         <h3>Diff:</h3>
         <div id="diff-killed-1">--- Original
 &#43;&#43;&#43; New
-@@ -61,7 &#43;61,7 @@
- 	parsedTemplate, err := template.ParseFiles(templatePath)
- 
+@@ -64,7 &#43;64,7 @@
+ func executeTemplate(data Data, templatePath string, outputReportFilePath string) {
+ 	parsedTemplate, err := template.ParseFS(reportTmplFS, templatePath)
  	if err != nil {
 -		panic(&#34;Unable to parse template file: &#34; &#43; err.Error())
 &#43;		panic(&#34;Unable to parse template file: &#34; - err.Error())
@@ -171,7 +171,7 @@
  	template := template.Must(parsedTemplate, err)
 </div>
         <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-3295575537/./go_mutesting_html_report.go.1&#34; with checksum 561a4790836e085a32d3bc2c4bfc1ffc
+        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.1&#34; with checksum a364fe4d7faf54cc02799603528ff67b
 </pre>
       </div>
       <hr />
@@ -182,7 +182,7 @@
         <h3>Diff:</h3>
         <div id="diff-killed-2">--- Original
 &#43;&#43;&#43; New
-@@ -68,7 &#43;68,7 @@
+@@ -71,7 &#43;71,7 @@
  
  	report, err := os.Create(outputReportFilePath)
  	if err != nil {
@@ -193,7 +193,7 @@
  	err = template.Execute(report, data)
 </div>
         <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-3295575537/./go_mutesting_html_report.go.2&#34; with checksum 7a2caf696a8bf96bbbf1722256073ac0
+        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.2&#34; with checksum 77c06a0d2e7b9da8c00aa3b7b534e25b
 </pre>
       </div>
       <hr />
@@ -204,7 +204,7 @@
         <h3>Diff:</h3>
         <div id="diff-killed-3">--- Original
 &#43;&#43;&#43; New
-@@ -73,7 &#43;73,7 @@
+@@ -76,7 &#43;76,7 @@
  
  	err = template.Execute(report, data)
  	if err != nil {
@@ -215,7 +215,7 @@
  
 </div>
         <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-3295575537/./go_mutesting_html_report.go.3&#34; with checksum eb89063e2d61b85545c74e8c1507143c
+        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.3&#34; with checksum c473f7b01ed217564803822e8e48a129
 </pre>
       </div>
       <hr />
@@ -226,7 +226,7 @@
         <h3>Diff:</h3>
         <div id="diff-killed-4">--- Original
 &#43;&#43;&#43; New
-@@ -46,7 &#43;46,7 @@
+@@ -50,7 &#43;50,7 @@
  func readJson(filePath string) Data {
  	jsonData, err := os.ReadFile(filePath)
  	if err != nil {
@@ -237,7 +237,7 @@
  	var data Data
 </div>
         <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-3295575537/./go_mutesting_html_report.go.4&#34; with checksum 6bd61222bfed2161c4e48118a67ebf74
+        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.4&#34; with checksum ab3beb46835286bbf823f16a7d94de34
 </pre>
       </div>
       <hr />
@@ -248,7 +248,7 @@
         <h3>Diff:</h3>
         <div id="diff-killed-5">--- Original
 &#43;&#43;&#43; New
-@@ -52,7 &#43;52,7 @@
+@@ -56,7 &#43;56,7 @@
  	var data Data
  	err = json.Unmarshal(jsonData, &amp;data)
  	if err != nil {
@@ -259,7 +259,7 @@
  }
 </div>
         <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-3295575537/./go_mutesting_html_report.go.5&#34; with checksum 81c711fe09c16b7b090c9662350e1c90
+        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.5&#34; with checksum 1517f4a002412cd781c5d35a1863a1bb
 </pre>
       </div>
       <hr />
@@ -270,9 +270,9 @@
         <h3>Diff:</h3>
         <div id="diff-killed-6">--- Original
 &#43;&#43;&#43; New
-@@ -61,7 &#43;61,7 @@
- 	parsedTemplate, err := template.ParseFiles(templatePath)
- 
+@@ -64,7 &#43;64,7 @@
+ func executeTemplate(data Data, templatePath string, outputReportFilePath string) {
+ 	parsedTemplate, err := template.ParseFS(reportTmplFS, templatePath)
  	if err != nil {
 -		panic(&#34;Unable to parse template file: &#34; &#43; err.Error())
 &#43;		_ = err.Error
@@ -281,7 +281,7 @@
  	template := template.Must(parsedTemplate, err)
 </div>
         <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-3295575537/./go_mutesting_html_report.go.6&#34; with checksum 1a061e72dc29d30b38387acced21626a
+        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.6&#34; with checksum 7098198943a96b851e4b6c78fe762a1b
 </pre>
       </div>
       <hr />
@@ -292,7 +292,7 @@
         <h3>Diff:</h3>
         <div id="diff-killed-7">--- Original
 &#43;&#43;&#43; New
-@@ -68,7 &#43;68,7 @@
+@@ -71,7 &#43;71,7 @@
  
  	report, err := os.Create(outputReportFilePath)
  	if err != nil {
@@ -303,7 +303,7 @@
  	err = template.Execute(report, data)
 </div>
         <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-3295575537/./go_mutesting_html_report.go.7&#34; with checksum 3af9038364564e64559bae7cd2c6d7d7
+        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.7&#34; with checksum 3367c841cf67bc1aae59461b976e644a
 </pre>
       </div>
       <hr />
@@ -314,7 +314,7 @@
         <h3>Diff:</h3>
         <div id="diff-killed-8">--- Original
 &#43;&#43;&#43; New
-@@ -73,7 &#43;73,7 @@
+@@ -76,7 &#43;76,7 @@
  
  	err = template.Execute(report, data)
  	if err != nil {
@@ -325,7 +325,7 @@
  
 </div>
         <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-3295575537/./go_mutesting_html_report.go.8&#34; with checksum f5110d81001fd54934d875f9d049f566
+        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.8&#34; with checksum 58640a7eb90966bd42a74e7e63ca8c87
 </pre>
       </div>
       <hr />
@@ -336,7 +336,7 @@
         <h3>Diff:</h3>
         <div id="diff-killed-9">--- Original
 &#43;&#43;&#43; New
-@@ -50,7 &#43;50,7 @@
+@@ -54,7 &#43;54,7 @@
  	}
  
  	var data Data
@@ -347,7 +347,7 @@
  	}
 </div>
         <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-3295575537/./go_mutesting_html_report.go.9&#34; with checksum 0e2e1437861ed462be1709033ed713eb
+        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.9&#34; with checksum 8945d1934a68f0be470616df4b6fdafc
 </pre>
       </div>
       <hr />
@@ -358,7 +358,7 @@
         <h3>Diff:</h3>
         <div id="diff-killed-10">--- Original
 &#43;&#43;&#43; New
-@@ -70,8 &#43;70,7 @@
+@@ -73,8 &#43;73,7 @@
  	if err != nil {
  		panic(&#34;Unable to create report file: &#34; &#43; err.Error())
  	}
@@ -370,7 +370,7 @@
  	}
 </div>
         <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-3295575537/./go_mutesting_html_report.go.12&#34; with checksum 51ba4548b7bf88b2f84ec54e915de3d8
+        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.12&#34; with checksum 2107e9e6a899a2725ee1d3287a50f3a2
 </pre>
       </div>
       <hr />
@@ -381,7 +381,7 @@
         <h3>Diff:</h3>
         <div id="diff-killed-11">--- Original
 &#43;&#43;&#43; New
-@@ -81,7 &#43;81,7 @@
+@@ -84,7 &#43;84,7 @@
  	jsonFilePath := flag.String(&#34;file&#34;, &#34;report.json&#34;, &#34;Provide report.json:: -file &lt;PATH_TO_JSON_REPORT&gt;&#34;)
  	templatePath := flag.String(&#34;template&#34;, &#34;report.tmpl&#34;, &#34;Provide template path:: -template &lt;PATH_TO_TEMPLATE&gt;&#34;)
  	reportPath := flag.String(&#34;out&#34;, &#34;report.html&#34;, &#34;Provide report output path:: -out &lt;PATH_TO_OUTPUT_HTML_REPORT&gt;&#34;)
@@ -392,7 +392,7 @@
  	executeTemplate(data, *templatePath, *reportPath)
 </div>
         <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-3295575537/./go_mutesting_html_report.go.16&#34; with checksum f8a4971d6cfd01ca348a21f28d331a13
+        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.16&#34; with checksum 58b24219d338eacec6d7957c00e0b613
 </pre>
       </div>
       <hr />
@@ -403,7 +403,7 @@
         <h3>Diff:</h3>
         <div id="diff-killed-12">--- Original
 &#43;&#43;&#43; New
-@@ -84,5 &#43;84,6 @@
+@@ -87,5 &#43;87,6 @@
  	flag.Parse()
  
  	data := readJson(*jsonFilePath)
@@ -413,7 +413,7 @@
  }
 </div>
         <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-3295575537/./go_mutesting_html_report.go.17&#34; with checksum e1d78311f2ed60b78665a24cc13502d5
+        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.17&#34; with checksum 431df67ccb710c0b1ce56024ed7340a2
 </pre>
       </div>
       <hr />
