@@ -38,8 +38,7 @@ func TestMain(t *testing.T) {
 				"totalMutantsCount": 10,
 				"killedCount": 5
 			},
-			"escaped": [],
-			"killed": []
+			"escaped": []
 		}`
 		file := createTempFile(t, "*.json")
 		filePath := file.Name()
@@ -139,7 +138,7 @@ func TestReadJSON(t *testing.T) {
 func TestExecuteTemplate(t *testing.T) {
 
 	t.Run("TestExecuteTemplateUnableToReadTemplate", func(t *testing.T) {
-		data := Data{}
+		data := Report{}
 
 		defer func() {
 			expectedError := "Unable to parse template file: template: pattern matches no files: `testTemplate.html`"
@@ -152,7 +151,7 @@ func TestExecuteTemplate(t *testing.T) {
 	})
 
 	t.Run("TestExecuteTemplateUnableToCreateReportFile", func(t *testing.T) {
-		data := Data{}
+		data := Report{}
 
 		defer func() {
 			expectedError := "Unable to create report file: open /unknowpath/testOutput.html: no such file or directory"
@@ -181,7 +180,7 @@ func TestExecuteTemplate(t *testing.T) {
 			assert.Equal(t, expectedError, r)
 		}()
 
-		data := Data{}
+		data := Report{}
 
 		executeTemplate(data, tempTemplateFileName, reportOutputPath)
 	})
@@ -202,7 +201,7 @@ func TestExecuteTemplate(t *testing.T) {
 			assert.Equal(t, expectedError, r)
 		}()
 
-		data := Data{Stats: Stats{TotalMutantsCount: 10}}
+		data := Report{Stats: Stats{TotalMutantsCount: 10}}
 
 		executeTemplate(data, tempTemplateFileName, reportOutputPath)
 	})
@@ -221,12 +220,41 @@ func TestExecuteTemplate(t *testing.T) {
 			assert.Nil(t, r, "Expected test to pass, but threw err")
 		}()
 
-		data := Data{}
+		data := Report{}
 
 		executeTemplate(data, tempTemplateFileName, reportOutputPath)
 		fileContent, _ := os.ReadFile(reportOutputPath)
 
 		expectedOutput := "<html><body> Total Mutant: 0 | Killed Count: 0 <body><html>"
 		assert.Equal(t, expectedOutput, string(fileContent), "Report File content not matched")
+	})
+}
+
+func TestGroupByFiles(t *testing.T) {
+	t.Run("TestGroupFilesByName", func(t *testing.T) {
+		data := Data{
+			Stats: Stats{TotalMutantsCount: 10},
+			Escaped: []Entry{
+				{Mutator: Mutator{OriginalFilePath: "testFile.go"}, ProcessOutput: "Pass testFile.go with checksum randomchecksumescaped"},
+				{Mutator: Mutator{OriginalFilePath: "testFile1.go"}, ProcessOutput: "Pass testFile1.go with checksum randomchecksumescaped1"},
+			},
+			Killed: []Entry{
+				{Mutator: Mutator{OriginalFilePath: "testFile.go"}, ProcessOutput: "Pass testFile.go with checksum randomchecksumkilled"},
+				{Mutator: Mutator{OriginalFilePath: "testFile1.go"}, ProcessOutput: "Pass testFile.go with checksum randomchecksumkilled1"},
+			},
+		}
+		report := groupByFile(data)
+		expectedFileMap := make(map[string]ReportDetails)
+		escapedFile1 := []MutatorDetail{{Checksum: "randomchecksumescaped"}}
+		escapedFile2 := []MutatorDetail{{Checksum: "randomchecksumescaped1"}}
+		killedFile1 := []MutatorDetail{{Checksum: "randomchecksumkilled"}}
+		killedFile2 := []MutatorDetail{{Checksum: "randomchecksumkilled1"}}
+		expectedFileMap["testFile.go"] = ReportDetails{Escaped: escapedFile1, Killed: killedFile1}
+		expectedFileMap["testFile1.go"] = ReportDetails{Escaped: escapedFile2, Killed: killedFile2}
+		expectedReport := Report{
+			Stats:        Stats{TotalMutantsCount: 10},
+			ReportDetail: expectedFileMap,
+		}
+		assert.Equal(t, expectedReport, report)
 	})
 }

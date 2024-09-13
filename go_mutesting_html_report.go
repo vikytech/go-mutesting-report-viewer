@@ -7,9 +7,10 @@ import (
 	"html/template"
 	"log"
 	"os"
+	"strings"
 )
 
-//go:embed report.tmpl report_test.tmpl report_test_execute_error.tmpl report_test_parse_error.tmpl
+//go:embed *.tmpl
 var reportTmplFS embed.FS
 
 type Mutator struct {
@@ -47,6 +48,21 @@ type Data struct {
 	Errored   interface{} `json:"errored"`
 }
 
+type MutatorDetail struct {
+	MutatorName string
+	Diff        string
+	Checksum    string
+}
+
+type ReportDetails struct {
+	Escaped []MutatorDetail
+	Killed  []MutatorDetail
+}
+type Report struct {
+	Stats        Stats
+	ReportDetail map[string]ReportDetails
+}
+
 func readJson(filePath string) Data {
 	jsonData, err := os.ReadFile(filePath)
 	if err != nil {
@@ -61,7 +77,7 @@ func readJson(filePath string) Data {
 	return data
 }
 
-func executeTemplate(data Data, templatePath string, outputReportFilePath string) {
+func executeTemplate(report Report, templatePath string, outputReportFilePath string) {
 	parsedTemplate, err := template.ParseFS(reportTmplFS, templatePath)
 	if err != nil {
 		panic("Unable to parse template file: " + err.Error())
@@ -69,15 +85,39 @@ func executeTemplate(data Data, templatePath string, outputReportFilePath string
 
 	template := template.Must(parsedTemplate, err)
 
-	report, err := os.Create(outputReportFilePath)
+	outputReport, err := os.Create(outputReportFilePath)
 	if err != nil {
 		panic("Unable to create report file: " + err.Error())
 	}
 
-	err = template.Execute(report, data)
+	err = template.Execute(outputReport, report)
 	if err != nil {
 		panic("Error executing template: " + err.Error())
 	}
+}
+
+func groupByFile(data Data) Report {
+	fileMap := make(map[string]ReportDetails)
+	escaped := data.Escaped
+	killed := data.Killed
+
+	for _, escapedMutantEntry := range escaped {
+		out := strings.Split(escapedMutantEntry.ProcessOutput, " ")
+		entry := MutatorDetail{MutatorName: escapedMutantEntry.Mutator.MutatorName, Diff: escapedMutantEntry.Diff, Checksum: out[4]}
+		escapedEntry := fileMap[escapedMutantEntry.Mutator.OriginalFilePath].Escaped
+		updatedEntry := append(escapedEntry, entry)
+		fileMap[escapedMutantEntry.Mutator.OriginalFilePath] = ReportDetails{Escaped: updatedEntry}
+	}
+
+	for _, killedMutantEntry := range killed {
+		out := strings.Split(killedMutantEntry.ProcessOutput, " ")
+		entry := MutatorDetail{MutatorName: killedMutantEntry.Mutator.MutatorName, Diff: killedMutantEntry.Diff, Checksum: out[4]}
+		killedEntry := fileMap[killedMutantEntry.Mutator.OriginalFilePath].Killed
+		updatedEntry := append(killedEntry, entry)
+		fileMap[killedMutantEntry.Mutator.OriginalFilePath] = ReportDetails{Escaped: fileMap[killedMutantEntry.Mutator.OriginalFilePath].Escaped, Killed: updatedEntry}
+	}
+
+	return Report{Stats: data.Stats, ReportDetail: fileMap}
 }
 
 func main() {
@@ -87,5 +127,5 @@ func main() {
 	flag.Parse()
 
 	data := readJson(*jsonFilePath)
-	executeTemplate(data, *templatePath, *reportPath)
+	executeTemplate(groupByFile(data), *templatePath, *reportPath)
 }

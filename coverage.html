@@ -78,9 +78,10 @@ import (
         "html/template"
         "log"
         "os"
+        "strings"
 )
 
-//go:embed report.tmpl report_test.tmpl report_test_execute_error.tmpl report_test_parse_error.tmpl
+//go:embed *.tmpl
 var reportTmplFS embed.FS
 
 type Mutator struct {
@@ -118,6 +119,21 @@ type Data struct {
         Errored   interface{} `json:"errored"`
 }
 
+type MutatorDetail struct {
+        MutatorName string
+        Diff        string
+        Checksum    string
+}
+
+type ReportDetails struct {
+        Escaped []MutatorDetail
+        Killed  []MutatorDetail
+}
+type Report struct {
+        Stats        Stats
+        ReportDetail map[string]ReportDetails
+}
+
 func readJson(filePath string) Data <span class="cov8" title="1">{
         jsonData, err := os.ReadFile(filePath)
         if err != nil </span><span class="cov8" title="1">{
@@ -132,7 +148,7 @@ func readJson(filePath string) Data <span class="cov8" title="1">{
         <span class="cov8" title="1">return data</span>
 }
 
-func executeTemplate(data Data, templatePath string, outputReportFilePath string) <span class="cov8" title="1">{
+func executeTemplate(report Report, templatePath string, outputReportFilePath string) <span class="cov8" title="1">{
         parsedTemplate, err := template.ParseFS(reportTmplFS, templatePath)
         if err != nil </span><span class="cov8" title="1">{
                 panic("Unable to parse template file: " + err.Error())</span>
@@ -140,15 +156,39 @@ func executeTemplate(data Data, templatePath string, outputReportFilePath string
 
         <span class="cov8" title="1">template := template.Must(parsedTemplate, err)
 
-        report, err := os.Create(outputReportFilePath)
+        outputReport, err := os.Create(outputReportFilePath)
         if err != nil </span><span class="cov8" title="1">{
                 panic("Unable to create report file: " + err.Error())</span>
         }
 
-        <span class="cov8" title="1">err = template.Execute(report, data)
+        <span class="cov8" title="1">err = template.Execute(outputReport, report)
         if err != nil </span><span class="cov8" title="1">{
                 panic("Error executing template: " + err.Error())</span>
         }
+}
+
+func groupByFile(data Data) Report <span class="cov8" title="1">{
+        fileMap := make(map[string]ReportDetails)
+        escaped := data.Escaped
+        killed := data.Killed
+
+        for _, escapedMutantEntry := range escaped </span><span class="cov8" title="1">{
+                out := strings.Split(escapedMutantEntry.ProcessOutput, " ")
+                entry := MutatorDetail{MutatorName: escapedMutantEntry.Mutator.MutatorName, Diff: escapedMutantEntry.Diff, Checksum: out[4]}
+                escapedEntry := fileMap[escapedMutantEntry.Mutator.OriginalFilePath].Escaped
+                updatedEntry := append(escapedEntry, entry)
+                fileMap[escapedMutantEntry.Mutator.OriginalFilePath] = ReportDetails{Escaped: updatedEntry}
+        }</span>
+
+        <span class="cov8" title="1">for _, killedMutantEntry := range killed </span><span class="cov8" title="1">{
+                out := strings.Split(killedMutantEntry.ProcessOutput, " ")
+                entry := MutatorDetail{MutatorName: killedMutantEntry.Mutator.MutatorName, Diff: killedMutantEntry.Diff, Checksum: out[4]}
+                killedEntry := fileMap[killedMutantEntry.Mutator.OriginalFilePath].Killed
+                updatedEntry := append(killedEntry, entry)
+                fileMap[killedMutantEntry.Mutator.OriginalFilePath] = ReportDetails{Escaped: fileMap[killedMutantEntry.Mutator.OriginalFilePath].Escaped, Killed: updatedEntry}
+        }</span>
+
+        <span class="cov8" title="1">return Report{Stats: data.Stats, ReportDetail: fileMap}</span>
 }
 
 func main() <span class="cov8" title="1">{
@@ -158,7 +198,7 @@ func main() <span class="cov8" title="1">{
         flag.Parse()
 
         data := readJson(*jsonFilePath)
-        executeTemplate(data, *templatePath, *reportPath)
+        executeTemplate(groupByFile(data), *templatePath, *reportPath)
 }</span>
 </pre>
 		

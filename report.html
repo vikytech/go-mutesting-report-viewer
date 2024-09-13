@@ -1,125 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="icon"
-      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧬</text></svg>"
-    />
-    <title>Mutation Report</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-      }
-      .section {
-        margin-bottom: 20px;
-      }
-      h1,
-      h2 {
-        color: #333;
-        text-align: center;
-        font-size: 35px;
-      }
-      p {
-        text-align: center;
-      }
-      pre {
-        background-color: #f4f4f4;
-        padding: 10px;
-        border-radius: 5px;
-        border: #0000007d inset 5px;
-        overflow: scroll;
-      }
-      .diff {
-        margin-top: 20px;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 20px;
-      }
-      table,
-      th,
-      td {
-        border: 1px solid #ddd;
-      }
-      th,
-      td {
-        padding: 8px;
-        text-align: left;
-      }
-      th {
-        background-color: #f2f2f2;
-      }
-    </style>
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="./assets/vendor/css/diff2html.min.css"
-      onerror='this.onerror=null;this.href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css"'
-    />
-    <script
-      type="text/javascript"
-      src="./assets/vendor/js/diff2html-ui.min.js"
-    ></script>
-    <script>
-      window.Diff2HtmlUI ||
-        document.write(
-          '\x3Cscript src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js">\x3C/script>'
-        );
-    </script>
-    <script>
-      function pretifyDiff(diffSrcElement) {
-        const html = new Diff2HtmlUI(diffSrcElement, diffSrcElement.innerHTML, {
-          outputFormat: "line-by-line",
-          highlightLanguages: "go",
-          matchingMaxComparisons: 25,
-          matchWordsThreshold: 0.35,
-          drawFileList: false,
-          colorScheme: "light",
-        });
-        html.draw();
-      }
-    </script>
-  </head>
-  <body>
-    <h1>Mutation Report</h1>
 
-    <div id="stats" class="section">
-      <h2>Stats</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Total Mutants Count</th>
-            <th>Killed Count</th>
-            <th>Not Covered Count</th>
-            <th>Escaped Count</th>
-            <th>Error Count</th>
-            <th>Skipped Count</th>
-            <th>Timeout Count</th>
-            <th>MSI</th>
-            <th>Mutation Code Coverage</th>
-            <th>Covered Code MSI</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>13</td>
-            <td>13</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <hr />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧬</text></svg>" />
+  <title>Mutation Report</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    h1,
+    h2 {
+      color: #333;
+      text-align: center;
+      font-size: 35px;
+    }
+
+    p {
+      text-align: center;
+    }
+
+    pre {
+      background-color: #f4f4f4;
+      padding: 10px;
+      border-radius: 5px;
+      border: #0000007d inset 5px;
+      overflow: scroll;
+    }
+
+    .diff {
+      margin-top: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    table,
+    th,
+    td {
+      border: 1px solid #ddd;
+    }
+
+    th,
+    td {
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .fixed {
+      position: fixed;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      top: -25px;
+    }
+
+    #file-list {
+      top: 10px;
+      width: 400px;
+      z-index: 999;
+    }
+
+    .hide {
+      display: none;
+    }
+
+    .show {
+      display: block;
+    }
+  </style>
+  <link rel="stylesheet" type="text/css" href="./assets/vendor/css/diff2html.min.css"
+    onerror='this.onerror=null;this.href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css"' />
+  <script type="text/javascript" src="./assets/vendor/js/diff2html-ui.min.js"></script>
+  <script>
+    window.Diff2HtmlUI ||
+      document.write(
+        '\x3Cscript src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js">\x3C/script>'
+      );
+  </script>
+  <script>
+    function pretifyDiff(diffSrcElement) {
+      const html = new Diff2HtmlUI(diffSrcElement, diffSrcElement.innerHTML, {
+        outputFormat: "line-by-line",
+        highlightLanguages: "go",
+        matchingMaxComparisons: 25,
+        matchWordsThreshold: 0.35,
+        drawFileList: false,
+        colorScheme: "light",
+      });
+      html.draw();
+    }
+  </script>
+</head>
+
+<body>
+  <h1 class="fixed">Mutation Report</h1>
+
+  <div id="stats" class="section" style="margin-top: 80px;">
+    <h2>Stats</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Total Mutants Count</th>
+          <th>Killed Count</th>
+          <th>Not Covered Count</th>
+          <th>Escaped Count</th>
+          <th>Error Count</th>
+          <th>Skipped Count</th>
+          <th>Timeout Count</th>
+          <th>MSI</th>
+          <th>Mutation Code Coverage</th>
+          <th>Covered Code MSI</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>13</td>
+          <td>13</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <hr />
+  
+  <select id="file-list" class="fixed">
+    
+    <option id="./go_mutesting_html_report.go">./go_mutesting_html_report.go</option>
+    
+  </select>
+  
+  <div id="file-./go_mutesting_html_report.go" class="hide">
     <div id="escaped" class="section">
       <h2>Escaped</h2>
       
@@ -148,8 +180,8 @@
  	return data
  }
 </div>
-        <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.0&#34; with checksum 05543503570d7a1094e57db951b91f4d
+        <h3>Checksum:</h3>
+        <pre>05543503570d7a1094e57db951b91f4d
 </pre>
       </div>
       <hr />
@@ -170,8 +202,8 @@
  
  	template := template.Must(parsedTemplate, err)
 </div>
-        <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.1&#34; with checksum a364fe4d7faf54cc02799603528ff67b
+        <h3>Checksum:</h3>
+        <pre>a364fe4d7faf54cc02799603528ff67b
 </pre>
       </div>
       <hr />
@@ -192,8 +224,8 @@
  
  	err = template.Execute(report, data)
 </div>
-        <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.2&#34; with checksum 77c06a0d2e7b9da8c00aa3b7b534e25b
+        <h3>Checksum:</h3>
+        <pre>77c06a0d2e7b9da8c00aa3b7b534e25b
 </pre>
       </div>
       <hr />
@@ -214,8 +246,8 @@
  }
  
 </div>
-        <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.3&#34; with checksum c473f7b01ed217564803822e8e48a129
+        <h3>Checksum:</h3>
+        <pre>c473f7b01ed217564803822e8e48a129
 </pre>
       </div>
       <hr />
@@ -236,8 +268,8 @@
  
  	var data Data
 </div>
-        <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.4&#34; with checksum ab3beb46835286bbf823f16a7d94de34
+        <h3>Checksum:</h3>
+        <pre>ab3beb46835286bbf823f16a7d94de34
 </pre>
       </div>
       <hr />
@@ -258,8 +290,8 @@
  	return data
  }
 </div>
-        <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.5&#34; with checksum 1517f4a002412cd781c5d35a1863a1bb
+        <h3>Checksum:</h3>
+        <pre>1517f4a002412cd781c5d35a1863a1bb
 </pre>
       </div>
       <hr />
@@ -280,8 +312,8 @@
  
  	template := template.Must(parsedTemplate, err)
 </div>
-        <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.6&#34; with checksum 7098198943a96b851e4b6c78fe762a1b
+        <h3>Checksum:</h3>
+        <pre>7098198943a96b851e4b6c78fe762a1b
 </pre>
       </div>
       <hr />
@@ -302,8 +334,8 @@
  
  	err = template.Execute(report, data)
 </div>
-        <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.7&#34; with checksum 3367c841cf67bc1aae59461b976e644a
+        <h3>Checksum:</h3>
+        <pre>3367c841cf67bc1aae59461b976e644a
 </pre>
       </div>
       <hr />
@@ -324,8 +356,8 @@
  }
  
 </div>
-        <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.8&#34; with checksum 58640a7eb90966bd42a74e7e63ca8c87
+        <h3>Checksum:</h3>
+        <pre>58640a7eb90966bd42a74e7e63ca8c87
 </pre>
       </div>
       <hr />
@@ -346,8 +378,8 @@
  		panic(&#34;Invalid JSON format: &#34; &#43; err.Error())
  	}
 </div>
-        <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.9&#34; with checksum 8945d1934a68f0be470616df4b6fdafc
+        <h3>Checksum:</h3>
+        <pre>8945d1934a68f0be470616df4b6fdafc
 </pre>
       </div>
       <hr />
@@ -369,8 +401,8 @@
  		panic(&#34;Error executing template: &#34; &#43; err.Error())
  	}
 </div>
-        <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.12&#34; with checksum 2107e9e6a899a2725ee1d3287a50f3a2
+        <h3>Checksum:</h3>
+        <pre>2107e9e6a899a2725ee1d3287a50f3a2
 </pre>
       </div>
       <hr />
@@ -391,8 +423,8 @@
  	data := readJson(*jsonFilePath)
  	executeTemplate(data, *templatePath, *reportPath)
 </div>
-        <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.16&#34; with checksum 58b24219d338eacec6d7957c00e0b613
+        <h3>Checksum:</h3>
+        <pre>58b24219d338eacec6d7957c00e0b613
 </pre>
       </div>
       <hr />
@@ -412,35 +444,34 @@
 &#43;
  }
 </div>
-        <h3>Process Output:</h3>
-        <pre>PASS &#34;/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.17&#34; with checksum 431df67ccb710c0b1ce56024ed7340a2
+        <h3>Checksum:</h3>
+        <pre>431df67ccb710c0b1ce56024ed7340a2
 </pre>
       </div>
       <hr />
        
     </div>
-    <hr />
-    <div id="timeouted" class="section">
-      <h2>Timeouted</h2>
-      
-      <p>No timeouted entries.</p>
-      
-    </div>
-    <hr />
-    <div id="errored" class="section">
-      <h2>Errored</h2>
-      
-      <p>No errored entries.</p>
-      
-    </div>
-    <hr />
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        var diffIds = document.querySelectorAll('[id^="diff"]');
-        diffIds.forEach((diff) => {
-          pretifyDiff(diff);
-        });
+  </div>
+  
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var diffIds = document.querySelectorAll('[id^="diff"]');
+      diffIds.forEach((diff) => {
+        pretifyDiff(diff);
       });
-    </script>
-  </body>
+    });
+    selectedFile = document.getElementById("file-list");
+    document.getElementById('file-' + selectedFile.value).classList.add("show");
+    selectedFile.addEventListener("change", function () {
+      var reporFiles = document.querySelectorAll('[id^="file-"');
+      for (var i = 1; i < reporFiles.length; i++) {
+        reporFiles[i].classList.remove("show");
+        reporFiles[i].classList.add("hide");
+      }
+      document.getElementById('file-' + selectedFile.value).classList.add("show");
+    });
+  </script>
+</body>
+
 </html>
