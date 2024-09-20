@@ -1,17 +1,27 @@
 #!/usr/bin/env bash
 
 curl --request GET \
-  --url https://gocd.idfcbank.com/go/api/pipelines/$1/history \
-  --header 'Accept: application/vnd.go.cd+json' \
-  --header 'Authorization: Basic dmlraHlhdGgubl90aG86VlRvY2tlbkAxMUAy' \
-  --header 'User-Agent: insomnia/8.4.5' \
-  --cookie JSESSIONID=node058t3hy0jr4121lek1tffz3m8r4290205.node0 > gocd_history
+    --url https://gocd.idfcbank.com/go/api/pipelines/$1/history \
+    --header 'Accept: application/vnd.go.cd+json' \
+    --header 'Authorization: Basic dmlraHlhdGgubl90aG86VlRvY2tlbkAxMUAy' >gocd_history
 
-# echo $history
-lastRunGitSha=`cat gocd_history | jq -r ".pipelines[0].build_cause.material_revisions[0].modifications[0].revision"`
+lastRunGitSha=$(cat gocd_history | jq -r ".pipelines[0].build_cause.material_revisions[0].modifications[0].revision")
+lastBuildCounter=$(cat gocd_history | jq -r ".pipelines[0].counter")
+
+curl --request GET \
+    --url https://gocd.idfcbank.com/go/files/$1/$lastBuildCounter/mutation_test/1/serviceLayer/report.json \
+    --header 'Accept: application/vnd.go.cd+json' \
+    --header 'Authorization: Basic dmlraHlhdGgubl90aG86VlRvY2tlbkAxMUAy' >last_run_report.json
+
 rm gocd_history
-echo $lastRunGitSha
 
 servicefiles=$(git diff --name-only $lastRunGitSha HEAD~1 | grep -i ".service.go")
 
-[ -z "$servicefiles" ] && echo "No changes found" || go-mutesting $servicefiles
+if [ -z "$servicefiles" ]; then
+    echo "No changes found"
+    exit
+fi
+
+go-mutesting $servicefiles
+# ... trigger diff plugin and upload new report
+rm last_run_report.json
