@@ -23,7 +23,7 @@
         "originalStartLine": 0
       },
       "diff": "--- Original\n+++ New\n@@ -56,7 +56,7 @@\n \tvar data Data\n \terr = json.Unmarshal(jsonData, \u0026data)\n \tif err != nil {\n-\t\tpanic(\"Invalid JSON format: \" + err.Error())\n+\t\tpanic(\"Invalid JSON format: \" - err.Error())\n \t}\n \treturn data\n }\n",
-      "processOutput": "PASS \"/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.0\" with checksum 05543503570d7a1094e57db951b91f4d\n"
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3719870323/./go_mutesting_html_report.go.0\" with checksum 05543503570d7a1094e57db951b91f4d\n"
     },
     {
       "mutator": {
@@ -34,7 +34,7 @@
         "originalStartLine": 0
       },
       "diff": "--- Original\n+++ New\n@@ -64,7 +64,7 @@\n func executeTemplate(data Data, templatePath string, outputReportFilePath string) {\n \tparsedTemplate, err := template.ParseFS(reportTmplFS, templatePath)\n \tif err != nil {\n-\t\tpanic(\"Unable to parse template file: \" + err.Error())\n+\t\tpanic(\"Unable to parse template file: \" - err.Error())\n \t}\n \n \ttemplate := template.Must(parsedTemplate, err)\n",
-      "processOutput": "PASS \"/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.1\" with checksum a364fe4d7faf54cc02799603528ff67b\n"
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3719870323/./go_mutesting_html_report.go.1\" with checksum a364fe4d7faf54cc02799603528ff67b\n"
     },
     {
       "mutator": {
@@ -45,7 +45,7 @@
         "originalStartLine": 0
       },
       "diff": "--- Original\n+++ New\n@@ -71,7 +71,7 @@\n \n \treport, err := os.Create(outputReportFilePath)\n \tif err != nil {\n-\t\tpanic(\"Unable to create report file: \" + err.Error())\n+\t\tpanic(\"Unable to create report file: \" - err.Error())\n \t}\n \n \terr = template.Execute(report, data)\n",
-      "processOutput": "PASS \"/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.2\" with checksum 77c06a0d2e7b9da8c00aa3b7b534e25b\n"
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3719870323/./go_mutesting_html_report.go.2\" with checksum 77c06a0d2e7b9da8c00aa3b7b534e25b\n"
     },
     {
       "mutator": {
@@ -56,7 +56,7 @@
         "originalStartLine": 0
       },
       "diff": "--- Original\n+++ New\n@@ -76,7 +76,7 @@\n \n \terr = template.Execute(report, data)\n \tif err != nil {\n-\t\tpanic(\"Error executing template: \" + err.Error())\n+\t\tpanic(\"Error executing template: \" - err.Error())\n \t}\n }\n \n",
-      "processOutput": "PASS \"/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.3\" with checksum c473f7b01ed217564803822e8e48a129\n"
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3719870323/./go_mutesting_html_report.go.3\" with checksum c473f7b01ed217564803822e8e48a129\n"
     },
     {
       "mutator": {
@@ -67,7 +67,7 @@
         "originalStartLine": 0
       },
       "diff": "--- Original\n+++ New\n@@ -50,7 +50,7 @@\n func readJson(filePath string) Data {\n \tjsonData, err := os.ReadFile(filePath)\n \tif err != nil {\n-\t\tlog.Panicf(\"Error reading file: %s\", err.Error())\n+\t\t_, _ = log.Panicf, err.Error\n \t}\n \n \tvar data Data\n",
-      "processOutput": "PASS \"/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.4\" with checksum ab3beb46835286bbf823f16a7d94de34\n"
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3719870323/./go_mutesting_html_report.go.4\" with checksum ab3beb46835286bbf823f16a7d94de34\n"
     },
     {
       "mutator": {
@@ -78,7 +78,7 @@
         "originalStartLine": 0
       },
       "diff": "--- Original\n+++ New\n@@ -56,7 +56,7 @@\n \tvar data Data\n \terr = json.Unmarshal(jsonData, \u0026data)\n \tif err != nil {\n-\t\tpanic(\"Invalid JSON format: \" + err.Error())\n+\t\t_ = err.Error\n \t}\n \treturn data\n }\n",
-      "processOutput": "PASS \"/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.5\" with checksum 1517f4a002412cd781c5d35a1863a1bb\n"
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3719870323/./go_mutesting_html_report.go.5\" with checksum 1517f4a002412cd781c5d35a1863a1bb\n"
     },
     {
       "mutator": {
@@ -89,7 +89,7 @@
         "originalStartLine": 0
       },
       "diff": "--- Original\n+++ New\n@@ -64,7 +64,7 @@\n func executeTemplate(data Data, templatePath string, outputReportFilePath string) {\n \tparsedTemplate, err := template.ParseFS(reportTmplFS, templatePath)\n \tif err != nil {\n-\t\tpanic(\"Unable to parse template file: \" + err.Error())\n+\t\t_ = err.Error\n \t}\n \n \ttemplate := template.Must(parsedTemplate, err)\n",
-      "processOutput": "PASS \"/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.6\" with checksum 7098198943a96b851e4b6c78fe762a1b\n"
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3719870323/./go_mutesting_html_report.go.6\" with checksum 7098198943a96b851e4b6c78fe762a1b\n"
     },
     {
       "mutator": {
@@ -100,7 +100,7 @@
         "originalStartLine": 0
       },
       "diff": "--- Original\n+++ New\n@@ -71,7 +71,7 @@\n \n \treport, err := os.Create(outputReportFilePath)\n \tif err != nil {\n-\t\tpanic(\"Unable to create report file: \" + err.Error())\n+\t\t_ = err.Error\n \t}\n \n \terr = template.Execute(report, data)\n",
-      "processOutput": "PASS \"/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.7\" with checksum 3367c841cf67bc1aae59461b976e644a\n"
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3719870323/./go_mutesting_html_report.go.7\" with checksum 3367c841cf67bc1aae59461b976e644a\n"
     },
     {
       "mutator": {
@@ -111,7 +111,7 @@
         "originalStartLine": 0
       },
       "diff": "--- Original\n+++ New\n@@ -76,7 +76,7 @@\n \n \terr = template.Execute(report, data)\n \tif err != nil {\n-\t\tpanic(\"Error executing template: \" + err.Error())\n+\t\t_ = err.Error\n \t}\n }\n \n",
-      "processOutput": "PASS \"/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.8\" with checksum 58640a7eb90966bd42a74e7e63ca8c87\n"
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3719870323/./go_mutesting_html_report.go.8\" with checksum 58640a7eb90966bd42a74e7e63ca8c87\n"
     },
     {
       "mutator": {
@@ -122,7 +122,7 @@
         "originalStartLine": 0
       },
       "diff": "--- Original\n+++ New\n@@ -54,7 +54,7 @@\n \t}\n \n \tvar data Data\n-\terr = json.Unmarshal(jsonData, \u0026data)\n+\t_, _, _, _ = err, json.Unmarshal, jsonData, data\n \tif err != nil {\n \t\tpanic(\"Invalid JSON format: \" + err.Error())\n \t}\n",
-      "processOutput": "PASS \"/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.9\" with checksum 8945d1934a68f0be470616df4b6fdafc\n"
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3719870323/./go_mutesting_html_report.go.9\" with checksum 8945d1934a68f0be470616df4b6fdafc\n"
     },
     {
       "mutator": {
@@ -133,7 +133,7 @@
         "originalStartLine": 0
       },
       "diff": "--- Original\n+++ New\n@@ -73,8 +73,7 @@\n \tif err != nil {\n \t\tpanic(\"Unable to create report file: \" + err.Error())\n \t}\n-\n-\terr = template.Execute(report, data)\n+\t_, _, _, _ = err, template.Execute, report, data\n \tif err != nil {\n \t\tpanic(\"Error executing template: \" + err.Error())\n \t}\n",
-      "processOutput": "PASS \"/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.12\" with checksum 2107e9e6a899a2725ee1d3287a50f3a2\n"
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3719870323/./go_mutesting_html_report.go.12\" with checksum 2107e9e6a899a2725ee1d3287a50f3a2\n"
     },
     {
       "mutator": {
@@ -144,7 +144,7 @@
         "originalStartLine": 0
       },
       "diff": "--- Original\n+++ New\n@@ -84,7 +84,7 @@\n \tjsonFilePath := flag.String(\"file\", \"report.json\", \"Provide report.json:: -file \u003cPATH_TO_JSON_REPORT\u003e\")\n \ttemplatePath := flag.String(\"template\", \"report.tmpl\", \"Provide template path:: -template \u003cPATH_TO_TEMPLATE\u003e\")\n \treportPath := flag.String(\"out\", \"report.html\", \"Provide report output path:: -out \u003cPATH_TO_OUTPUT_HTML_REPORT\u003e\")\n-\tflag.Parse()\n+\t_ = flag.Parse\n \n \tdata := readJson(*jsonFilePath)\n \texecuteTemplate(data, *templatePath, *reportPath)\n",
-      "processOutput": "PASS \"/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.16\" with checksum 58b24219d338eacec6d7957c00e0b613\n"
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3719870323/./go_mutesting_html_report.go.16\" with checksum 58b24219d338eacec6d7957c00e0b613\n"
     },
     {
       "mutator": {
@@ -155,7 +155,7 @@
         "originalStartLine": 0
       },
       "diff": "--- Original\n+++ New\n@@ -87,5 +87,6 @@\n \tflag.Parse()\n \n \tdata := readJson(*jsonFilePath)\n-\texecuteTemplate(data, *templatePath, *reportPath)\n+\t_, _, _ = data, templatePath, reportPath\n+\n }\n",
-      "processOutput": "PASS \"/var/folders/ww/syn6_3z10m394hg39k2cct400000gn/T/go-mutesting-2263365705/./go_mutesting_html_report.go.17\" with checksum 431df67ccb710c0b1ce56024ed7340a2\n"
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3719870323/./go_mutesting_html_report.go.17\" with checksum 431df67ccb710c0b1ce56024ed7340a2\n"
     }
   ],
   "errored": null

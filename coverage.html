@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>go-mutesting-report-viewer: Go Coverage Report</title>
+		<title>gomutestingrhtmlreport: Go Coverage Report</title>
 		<style>
 			body {
 				background: black;
@@ -55,7 +55,13 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">github.com/vikytech/go-mutesting-report-viewer/go_mutesting_html_report.go (100.0%)</option>
+				<option value="file0">gomutestingrhtmlreport/go_mutesting_html_report.go (100.0%)</option>
+				
+				<option value="file1">gomutestingrhtmlreport/reportDiffer.go (0.0%)</option>
+				
+				<option value="file2">gomutestingrhtmlreport/todo_service.go (100.0%)</option>
+				
+				<option value="file3">gomutestingrhtmlreport/utils.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -73,82 +79,16 @@
 
 import (
         "embed"
-        "encoding/json"
         "flag"
+        models "gomutestingrhtmlreport/models"
         "html/template"
-        "log"
         "os"
-        "strings"
 )
 
 //go:embed *.tmpl
 var reportTmplFS embed.FS
 
-type Mutator struct {
-        MutatorName        string `json:"mutatorName"`
-        OriginalSourceCode string `json:"originalSourceCode"`
-        MutatedSourceCode  string `json:"mutatedSourceCode"`
-        OriginalFilePath   string `json:"originalFilePath"`
-        OriginalStartLine  int    `json:"originalStartLine"`
-}
-
-type Entry struct {
-        Mutator       Mutator `json:"mutator"`
-        Diff          string  `json:"diff"`
-        ProcessOutput string  `json:"processOutput"`
-}
-
-type Stats struct {
-        TotalMutantsCount    int     `json:"totalMutantsCount"`
-        KilledCount          int     `json:"killedCount"`
-        NotCoveredCount      int     `json:"notCoveredCount"`
-        EscapedCount         int     `json:"escapedCount"`
-        ErrorCount           int     `json:"errorCount"`
-        SkippedCount         int     `json:"skippedCount"`
-        TimeOutCount         int     `json:"timeOutCount"`
-        Msi                  float64 `json:"msi"`
-        MutationCodeCoverage float64 `json:"mutationCodeCoverage"`
-        CoveredCodeMsi       float64 `json:"coveredCodeMsi"`
-}
-
-type Data struct {
-        Stats     Stats       `json:"stats"`
-        Escaped   []Entry     `json:"escaped"`
-        Timeouted interface{} `json:"timeouted"`
-        Killed    []Entry     `json:"killed"`
-        Errored   interface{} `json:"errored"`
-}
-
-type MutatorDetail struct {
-        MutatorName string
-        Diff        string
-        Checksum    string
-}
-
-type ReportDetails struct {
-        Escaped []MutatorDetail
-        Killed  []MutatorDetail
-}
-type Report struct {
-        Stats        Stats
-        ReportDetail map[string]ReportDetails
-}
-
-func readJson(filePath string) Data <span class="cov8" title="1">{
-        jsonData, err := os.ReadFile(filePath)
-        if err != nil </span><span class="cov8" title="1">{
-                log.Panicf("Error reading file: %s", err.Error())
-        }</span>
-
-        <span class="cov8" title="1">var data Data
-        err = json.Unmarshal(jsonData, &amp;data)
-        if err != nil </span><span class="cov8" title="1">{
-                panic("Invalid JSON format: " + err.Error())</span>
-        }
-        <span class="cov8" title="1">return data</span>
-}
-
-func executeTemplate(report Report, templatePath string, outputReportFilePath string) <span class="cov8" title="1">{
+func executeTemplate(data models.Report, templatePath string, outputReportFilePath string) <span class="cov8" title="1">{
         parsedTemplate, err := template.ParseFS(reportTmplFS, templatePath)
         if err != nil </span><span class="cov8" title="1">{
                 panic("Unable to parse template file: " + err.Error())</span>
@@ -156,39 +96,15 @@ func executeTemplate(report Report, templatePath string, outputReportFilePath st
 
         <span class="cov8" title="1">template := template.Must(parsedTemplate, err)
 
-        outputReport, err := os.Create(outputReportFilePath)
+        report, err := os.Create(outputReportFilePath)
         if err != nil </span><span class="cov8" title="1">{
                 panic("Unable to create report file: " + err.Error())</span>
         }
 
-        <span class="cov8" title="1">err = template.Execute(outputReport, report)
+        <span class="cov8" title="1">err = template.Execute(report, data)
         if err != nil </span><span class="cov8" title="1">{
                 panic("Error executing template: " + err.Error())</span>
         }
-}
-
-func groupByFile(data Data) Report <span class="cov8" title="1">{
-        fileMap := make(map[string]ReportDetails)
-        escaped := data.Escaped
-        killed := data.Killed
-
-        for _, escapedMutantEntry := range escaped </span><span class="cov8" title="1">{
-                out := strings.Split(escapedMutantEntry.ProcessOutput, " ")
-                entry := MutatorDetail{MutatorName: escapedMutantEntry.Mutator.MutatorName, Diff: escapedMutantEntry.Diff, Checksum: out[4]}
-                escapedEntry := fileMap[escapedMutantEntry.Mutator.OriginalFilePath].Escaped
-                updatedEntry := append(escapedEntry, entry)
-                fileMap[escapedMutantEntry.Mutator.OriginalFilePath] = ReportDetails{Escaped: updatedEntry}
-        }</span>
-
-        <span class="cov8" title="1">for _, killedMutantEntry := range killed </span><span class="cov8" title="1">{
-                out := strings.Split(killedMutantEntry.ProcessOutput, " ")
-                entry := MutatorDetail{MutatorName: killedMutantEntry.Mutator.MutatorName, Diff: killedMutantEntry.Diff, Checksum: out[4]}
-                killedEntry := fileMap[killedMutantEntry.Mutator.OriginalFilePath].Killed
-                updatedEntry := append(killedEntry, entry)
-                fileMap[killedMutantEntry.Mutator.OriginalFilePath] = ReportDetails{Escaped: fileMap[killedMutantEntry.Mutator.OriginalFilePath].Escaped, Killed: updatedEntry}
-        }</span>
-
-        <span class="cov8" title="1">return Report{Stats: data.Stats, ReportDetail: fileMap}</span>
 }
 
 func main() <span class="cov8" title="1">{
@@ -200,6 +116,97 @@ func main() <span class="cov8" title="1">{
         data := readJson(*jsonFilePath)
         executeTemplate(groupByFile(data), *templatePath, *reportPath)
 }</span>
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package main
+
+import (
+        "fmt"
+        "github.com/go-test/deep"
+)
+
+func diff() <span class="cov0" title="0">{
+        oldReportJson := readJson("last-run-report.json")
+        newReportJson := readJson("report.json")
+        oldReport := groupByFile(oldReportJson)
+        newReport := groupByFile(newReportJson)
+        for key, report := range oldReport.ReportDetail </span><span class="cov0" title="0">{
+                fmt.Printf("key: %v\n", key)
+                // fmt.Printf("oldreport.Escaped: %v\n", report.Escaped)
+                // fmt.Printf("oldreport.Killed: %v\n", report.Killed)
+                fmt.Printf("deep.Equal(newReport.ReportDetail[key].Escaped, report.Escaped): %v\n", deep.Equal(newReport.ReportDetail[key].Escaped, report.Escaped))
+                fmt.Printf("deep.Equal(newReport.ReportDetail[key].Killed, report.Killed): %v\n", deep.Equal(newReport.ReportDetail[key].Killed, report.Killed))
+        }</span>
+        // for key, report := range newReport.ReportDetail {
+        //         fmt.Printf("key: %v\n", key)
+        //         fmt.Printf("newreport.Escaped: %v\n", report.Escaped)
+        //         fmt.Printf("newreport.Killed: %v\n", report.Killed)
+        // }
+        // fmt.Printf("deep.Equal(oldReport, newReport): %v\n", deep.Equal(oldReport.ReportDetail, newReport.ReportDetail))
+}
+
+func maina() <span class="cov0" title="0">{
+        diff()
+}</span>
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package main
+
+func IntMin(a, b int) int <span class="cov8" title="1">{
+        if a &lt;= b </span><span class="cov8" title="1">{
+                return a
+        }</span>
+        <span class="cov8" title="1">return b</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package main
+
+import (
+        "encoding/json"
+        models "gomutestingrhtmlreport/models"
+        "log"
+        "os"
+        "strings"
+)
+
+func readJson(filePath string) models.Data <span class="cov8" title="1">{
+        jsonData, err := os.ReadFile(filePath)
+        if err != nil </span><span class="cov8" title="1">{
+                log.Panicf("Error reading file: %s", err.Error())
+        }</span>
+
+        <span class="cov8" title="1">var data models.Data
+        err = json.Unmarshal(jsonData, &amp;data)
+        if err != nil </span><span class="cov8" title="1">{
+                panic("Invalid JSON format: " + err.Error())</span>
+        }
+        <span class="cov8" title="1">return data</span>
+}
+
+func groupByFile(data models.Data) models.Report <span class="cov8" title="1">{
+        fileMap := make(map[string]models.ReportDetails)
+        escaped := data.Escaped
+        killed := data.Killed
+
+        for _, escapedMutantEntry := range escaped </span><span class="cov8" title="1">{
+                out := strings.Split(escapedMutantEntry.ProcessOutput, " ")
+                entry := models.MutatorDetail{MutatorName: escapedMutantEntry.Mutator.MutatorName, Diff: escapedMutantEntry.Diff, Checksum: out[4]}
+                escapedEntry := fileMap[escapedMutantEntry.Mutator.OriginalFilePath].Escaped
+                updatedEntry := append(escapedEntry, entry)
+                fileMap[escapedMutantEntry.Mutator.OriginalFilePath] = models.ReportDetails{Escaped: updatedEntry}
+        }</span>
+
+        <span class="cov8" title="1">for _, killedMutantEntry := range killed </span><span class="cov8" title="1">{
+                out := strings.Split(killedMutantEntry.ProcessOutput, " ")
+                entry := models.MutatorDetail{MutatorName: killedMutantEntry.Mutator.MutatorName, Diff: killedMutantEntry.Diff, Checksum: out[4]}
+                killedEntry := fileMap[killedMutantEntry.Mutator.OriginalFilePath].Killed
+                updatedEntry := append(killedEntry, entry)
+                fileMap[killedMutantEntry.Mutator.OriginalFilePath] = models.ReportDetails{Escaped: fileMap[killedMutantEntry.Mutator.OriginalFilePath].Escaped, Killed: updatedEntry}
+        }</span>
+
+        <span class="cov8" title="1">return models.Report{Stats: data.Stats, ReportDetail: fileMap}</span>
+}
 </pre>
 		
 		</div>

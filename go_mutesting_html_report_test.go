@@ -1,6 +1,7 @@
 package main
 
 import (
+	models "gomutestingrhtmlreport/models"
 	"io"
 	"log"
 	"os"
@@ -38,7 +39,69 @@ func TestMain(t *testing.T) {
 				"totalMutantsCount": 10,
 				"killedCount": 5
 			},
-			"escaped": []
+			"escaped": [
+			{
+      "mutator": {
+        "mutatorName": "arithmetic/base",
+		"mutatedSourceCode": "package main",
+        "originalFilePath": "./go_mutesting_html_report1.go",
+        "originalStartLine": 0
+      },
+      "diff": "--- Original\n+++ New\n@@ -56,7 +56,7 @@\n \tvar data Data\n \terr = json.Unmarshal(jsonData, \u0026data)\n \tif err != nil {\n-\t\tpanic(\"Invalid JSON format: \" + err.Error())\n+\t\tpanic(\"Invalid JSON format: \" - err.Error())\n \t}\n \treturn data\n }\n",
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3719870323/./go_mutesting_html_report.go.0\" with checksum 1\n"
+    },
+	{
+      "mutator": {
+        "mutatorName": "arithmetic/base",
+		"mutatedSourceCode": "package main",
+        "originalFilePath": "./go_mutesting_html_report.go",
+        "originalStartLine": 0
+      },
+      "diff": "--- Original\n+++ New\n@@ -56,7 +56,7 @@\n \tvar data Data\n \terr = json.Unmarshal(jsonData, \u0026data)\n \tif err != nil {\n-\t\tpanic(\"Invalid JSON format: \" + err.Error())\n+\t\tpanic(\"Invalid JSON format: \" - err.Error())\n \t}\n \treturn data\n }\n",
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3719870323/./go_mutesting_html_report.go.0\" with checksum 2\n"
+    },
+	{
+      "mutator": {
+        "mutatorName": "arithmetic/base",
+		"mutatedSourceCode": "package main",
+        "originalFilePath": "./go_mutesting_html_report1.go",
+        "originalStartLine": 0
+      },
+      "diff": "--- Original\n+++ New\n@@ -56,7 +56,7 @@\n \tvar data Data\n \terr = json.Unmarshal(jsonData, \u0026data)\n \tif err != nil {\n-\t\tpanic(\"Invalid JSON format: \" + err.Error())\n+\t\tpanic(\"Invalid JSON format: \" - err.Error())\n \t}\n \treturn data\n }\n",
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3719870323/./go_mutesting_html_report.go.0\" with checksum 3\n"
+    },
+    {
+      "mutator": {
+        "mutatorName": "arithmetic/base",
+        "originalSourceCode": "package main\n\nim",
+        "mutatedSourceCode": "package main\n",
+        "originalFilePath": "./go_mutesting_html_report.go",
+        "originalStartLine": 0
+      },
+      "diff": "--- Original\n+++ New\n@@ -64,7 +64,7 @@\n func executeTemplate(data Data, templatePath string, outputReportFilePath string) {\n \tparsedTemplate, err := template.ParseFS(reportTmplFS, templatePath)\n \tif err != nil {\n-\t\tpanic(\"Unable to parse template file: \" + err.Error())\n+\t\tpanic(\"Unable to parse template file: \" - err.Error())\n \t}\n \n \ttemplate := template.Must(parsedTemplate, err)\n",
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3719870323/./go_mutesting_html_report.go.1\" with checksum 4\n"
+    }],
+	"killed": [{
+      "mutator": {
+        "mutatorName": "arithmetic/base",
+		"mutatedSourceCode": "package main",
+        "originalFilePath": "./go_mutesting_html_report1.go",
+        "originalStartLine": 0
+      },
+      "diff": "--- Original\n+++ New\n@@ -56,7 +56,7 @@\n \tvar data Data\n \terr = json.Unmarshal(jsonData, \u0026data)\n \tif err != nil {\n-\t\tpanic(\"Invalid JSON format: \" + err.Error())\n+\t\tpanic(\"Invalid JSON format: \" - err.Error())\n \t}\n \treturn data\n }\n",
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3719870323/./go_mutesting_html_report.go.0\" with checksum 5\n"
+    },
+    {
+      "mutator": {
+        "mutatorName": "arithmetic/some",
+        "originalSourceCode": "package main\n\nim",
+        "mutatedSourceCode": "package main\n",
+        "originalFilePath": "./go_mutesting_html_report.go",
+        "originalStartLine": 0
+      },
+      "diff": "--- Original\n+++ New\n@@ -64,7 +64,7 @@\n func executeTemplate(data Data, templatePath string, outputReportFilePath string) {\n \tparsedTemplate, err := template.ParseFS(reportTmplFS, templatePath)\n \tif err != nil {\n-\t\tpanic(\"Unable to parse template file: \" + err.Error())\n+\t\tpanic(\"Unable to parse template file: \" - err.Error())\n \t}\n \n \ttemplate := template.Must(parsedTemplate, err)\n",
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-3719870323/./go_mutesting_html_report.go.1\" with checksum 6\n"
+    }]
 		}`
 		file := createTempFile(t, "*.json")
 		filePath := file.Name()
@@ -59,7 +122,7 @@ func TestMain(t *testing.T) {
 			assert.Nil(t, err, "Failed to remove temporary json file")
 		}()
 
-		os.Args = []string{"cmd", "-file", filePath, "-out", reportOutputPath, "-template", "report_test.tmpl"}
+		os.Args = []string{"cmd", "-out", reportOutputPath, "-template", "report_test.tmpl"}
 		main()
 
 		fileContent, _ := os.ReadFile(reportOutputPath)
@@ -69,76 +132,10 @@ func TestMain(t *testing.T) {
 	})
 }
 
-func TestReadJSON(t *testing.T) {
-	t.Run("TestReadJson_ValidJson", func(t *testing.T) {
-		jsonContent := `{
-		"stats": {
-			"totalMutantsCount": 10,
-			"killedCount": 5,
-			"msi": 0.50,
-			"extraField": "shouldBeIgnored"
-
-		},
-		"escaped": [],
-		"killed": []
-	}`
-
-		file := createTempFile(t, "*.json")
-		filePath := file.Name()
-		writeContent(t, file, jsonContent)
-		defer os.Remove(filePath)
-
-		data := readJson(filePath)
-		assert.Equal(t, 10, data.Stats.TotalMutantsCount, "TotalMutantsCount")
-		assert.Equal(t, 5, data.Stats.KilledCount, "KilledCount")
-		assert.Equal(t, 0.50, data.Stats.Msi, "MSI")
-	})
-	t.Run("TestReadJson_InvalidJson", func(t *testing.T) {
-		jsonContent := `{invalid json}`
-
-		file := createTempFile(t, "*.json")
-		filePath := file.Name()
-		writeContent(t, file, jsonContent)
-		defer os.Remove(filePath)
-
-		defer func() {
-			expectedError := "Invalid JSON format: invalid character 'i' looking for beginning of object key string"
-			r := recover()
-			assert.NotNil(t, r, "Expected Error, but test passed")
-			assert.Equal(t, expectedError, r)
-		}()
-
-		readJson(filePath)
-	})
-
-	t.Run("TestReadJson_FileNotFound", func(t *testing.T) {
-		defer func() {
-			expectedError := "Error reading file: open nonexistent.json: no such file or directory"
-			r := recover()
-			assert.NotNil(t, r, "Expected Error, but test passed")
-			assert.Equal(t, expectedError, r)
-		}()
-
-		readJson("nonexistent.json")
-	})
-
-	t.Run("TestReadJson_NoFilePath", func(t *testing.T) {
-		defer func() {
-			expectedError := "Error reading file: open : no such file or directory"
-			r := recover()
-			assert.NotNil(t, r, "Expected Error, but test passed")
-			assert.Equal(t, expectedError, r)
-		}()
-
-		readJson("")
-	})
-
-}
-
 func TestExecuteTemplate(t *testing.T) {
 
 	t.Run("TestExecuteTemplateUnableToReadTemplate", func(t *testing.T) {
-		data := Report{}
+		data := models.Report{}
 
 		defer func() {
 			expectedError := "Unable to parse template file: template: pattern matches no files: `testTemplate.html`"
@@ -151,7 +148,7 @@ func TestExecuteTemplate(t *testing.T) {
 	})
 
 	t.Run("TestExecuteTemplateUnableToCreateReportFile", func(t *testing.T) {
-		data := Report{}
+		data := models.Report{}
 
 		defer func() {
 			expectedError := "Unable to create report file: open /unknowpath/testOutput.html: no such file or directory"
@@ -180,7 +177,7 @@ func TestExecuteTemplate(t *testing.T) {
 			assert.Equal(t, expectedError, r)
 		}()
 
-		data := Report{}
+		data := models.Report{}
 
 		executeTemplate(data, tempTemplateFileName, reportOutputPath)
 	})
@@ -196,12 +193,12 @@ func TestExecuteTemplate(t *testing.T) {
 				}
 			}
 			r := recover()
-			expectedError := "Error executing template: template: " + tempTemplateFileName + ":1:32: executing \"" + tempTemplateFileName + "\" at <.Stats.totalMutantsCount>: can't evaluate field totalMutantsCount in type main.Stats"
+			expectedError := "Error executing template: template: " + tempTemplateFileName + ":1:32: executing \"" + tempTemplateFileName + "\" at <.Stats.totalMutantsCount>: can't evaluate field totalMutantsCount in type models.Stats"
 			assert.NotNil(t, r, "Expected Error, but test passed")
 			assert.Equal(t, expectedError, r)
 		}()
 
-		data := Report{Stats: Stats{TotalMutantsCount: 10}}
+		data := models.Report{Stats: models.Stats{TotalMutantsCount: 10}}
 
 		executeTemplate(data, tempTemplateFileName, reportOutputPath)
 	})
@@ -220,41 +217,12 @@ func TestExecuteTemplate(t *testing.T) {
 			assert.Nil(t, r, "Expected test to pass, but threw err")
 		}()
 
-		data := Report{}
+		data := models.Report{}
 
 		executeTemplate(data, tempTemplateFileName, reportOutputPath)
 		fileContent, _ := os.ReadFile(reportOutputPath)
 
 		expectedOutput := "<html><body> Total Mutant: 0 | Killed Count: 0 <body><html>"
 		assert.Equal(t, expectedOutput, string(fileContent), "Report File content not matched")
-	})
-}
-
-func TestGroupByFiles(t *testing.T) {
-	t.Run("TestGroupFilesByName", func(t *testing.T) {
-		data := Data{
-			Stats: Stats{TotalMutantsCount: 10},
-			Escaped: []Entry{
-				{Mutator: Mutator{OriginalFilePath: "testFile.go"}, ProcessOutput: "Pass testFile.go with checksum randomchecksumescaped"},
-				{Mutator: Mutator{OriginalFilePath: "testFile1.go"}, ProcessOutput: "Pass testFile1.go with checksum randomchecksumescaped1"},
-			},
-			Killed: []Entry{
-				{Mutator: Mutator{OriginalFilePath: "testFile.go"}, ProcessOutput: "Pass testFile.go with checksum randomchecksumkilled"},
-				{Mutator: Mutator{OriginalFilePath: "testFile1.go"}, ProcessOutput: "Pass testFile.go with checksum randomchecksumkilled1"},
-			},
-		}
-		report := groupByFile(data)
-		expectedFileMap := make(map[string]ReportDetails)
-		escapedFile1 := []MutatorDetail{{Checksum: "randomchecksumescaped"}}
-		escapedFile2 := []MutatorDetail{{Checksum: "randomchecksumescaped1"}}
-		killedFile1 := []MutatorDetail{{Checksum: "randomchecksumkilled"}}
-		killedFile2 := []MutatorDetail{{Checksum: "randomchecksumkilled1"}}
-		expectedFileMap["testFile.go"] = ReportDetails{Escaped: escapedFile1, Killed: killedFile1}
-		expectedFileMap["testFile1.go"] = ReportDetails{Escaped: escapedFile2, Killed: killedFile2}
-		expectedReport := Report{
-			Stats:        Stats{TotalMutantsCount: 10},
-			ReportDetail: expectedFileMap,
-		}
-		assert.Equal(t, expectedReport, report)
 	})
 }

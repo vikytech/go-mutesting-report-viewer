@@ -1,0 +1,41 @@
+{
+  "stats": {
+    "totalMutantsCount": 2,
+    "killedCount": 2,
+    "notCoveredCount": 0,
+    "escapedCount": 0,
+    "errorCount": 0,
+    "skippedCount": 0,
+    "timeOutCount": 0,
+    "msi": 1,
+    "mutationCodeCoverage": 0,
+    "coveredCodeMsi": 0
+  },
+  "escaped": null,
+  "timeouted": null,
+  "killed": [
+    {
+      "mutator": {
+        "mutatorName": "branch/if",
+        "originalSourceCode": "package main\n\nfunc IntMin(a, b int) int {\n\tif a \u003c= b {\n\t\treturn a\n\t}\n\treturn b\n}\n",
+        "mutatedSourceCode": "package main\n\nfunc IntMin(a, b int) int {\n\tif a \u003c= b {\n\t\t_ = a\n\n\t}\n\treturn b\n}\n",
+        "originalFilePath": "/Users/vikhyath.n_tho/Projects/go-mutesting-report-viewer/todo_service.go",
+        "originalStartLine": 0
+      },
+      "diff": "--- Original\n+++ New\n@@ -2,7 +2,8 @@\n \n func IntMin(a, b int) int {\n \tif a \u003c= b {\n-\t\treturn a\n+\t\t_ = a\n+\n \t}\n \treturn b\n }\n",
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-801026391//Users/vikhyath.n_tho/Projects/go-mutesting-report-viewer/todo_service.go.0\" with checksum 0c150dd538726eb8db37cc5388ae10b9\n"
+    },
+    {
+      "mutator": {
+        "mutatorName": "expression/comparison",
+        "originalSourceCode": "package main\n\nfunc IntMin(a, b int) int {\n\tif a \u003c= b {\n\t\treturn a\n\t}\n\treturn b\n}\n",
+        "mutatedSourceCode": "package main\n\nfunc IntMin(a, b int) int {\n\tif a \u003c b {\n\t\treturn a\n\t}\n\treturn b\n}\n",
+        "originalFilePath": "/Users/vikhyath.n_tho/Projects/go-mutesting-report-viewer/todo_service.go",
+        "originalStartLine": 0
+      },
+      "diff": "--- Original\n+++ New\n@@ -1,7 +1,7 @@\n package main\n \n func IntMin(a, b int) int {\n-\tif a \u003c= b {\n+\tif a \u003c b {\n \t\treturn a\n \t}\n \treturn b\n",
+      "processOutput": "PASS \"/var/folders/y_/rcm9fbdn27d9plc8hdd5pttw0000gq/T/go-mutesting-801026391//Users/vikhyath.n_tho/Projects/go-mutesting-report-viewer/todo_service.go.1\" with checksum b8571908720ad3378004253c44c86aeb\n"
+    }
+  ],
+  "errored": null
+}

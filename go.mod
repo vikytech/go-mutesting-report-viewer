@@ -1,8 +1,11 @@
-module github.com/vikytech/go-mutesting-report-viewer
+module gomutestingrhtmlreport
 
-go 1.23.0
+go 1.22.3
 
-require github.com/stretchr/testify v1.9.0
+require (
+	github.com/go-test/deep v1.1.1
+	github.com/stretchr/testify v1.9.0
+)
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect

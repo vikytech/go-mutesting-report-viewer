@@ -110,8 +110,8 @@
 <body>
   <h1 class="fixed">Mutation Report</h1>
 
-  <div id="stats" class="section" style="margin-top: 80px;">
-    <h2>Stats</h2>
+  <div id="global-stats" class="section" style="margin-top: 80px;">
+    <h2>Global Stats</h2>
     <table>
       <thead>
         <tr>
@@ -129,16 +129,16 @@
       </thead>
       <tbody>
         <tr>
-          <td>{{ .Stats.TotalMutantsCount }}</td>
-          <td>{{ .Stats.KilledCount }}</td>
-          <td>{{ .Stats.NotCoveredCount }}</td>
-          <td>{{ .Stats.EscapedCount }}</td>
-          <td>{{ .Stats.ErrorCount }}</td>
-          <td>{{ .Stats.SkippedCount }}</td>
-          <td>{{ .Stats.TimeOutCount }}</td>
-          <td>{{ .Stats.Msi }}</td>
-          <td>{{ .Stats.MutationCodeCoverage }}</td>
-          <td>{{ .Stats.CoveredCodeMsi }}</td>
+          <td>{{ .GlobalStats.TotalMutantsCount }}</td>
+          <td>{{ .GlobalStats.KilledCount }}</td>
+          <td>{{ .GlobalStats.NotCoveredCount }}</td>
+          <td>{{ .GlobalStats.EscapedCount }}</td>
+          <td>{{ .GlobalStats.ErrorCount }}</td>
+          <td>{{ .GlobalStats.SkippedCount }}</td>
+          <td>{{ .GlobalStats.TimeOutCount }}</td>
+          <td>{{ .GlobalStats.Msi }}</td>
+          <td>{{ .GlobalStats.MutationCodeCoverage }}</td>
+          <td>{{ .GlobalStats.CoveredCodeMsi }}</td>
         </tr>
       </tbody>
     </table>
@@ -154,6 +154,39 @@
   </select>
   {{ range $key, $value := .ReportDetail }}
   <div id="file-{{ $key }}" class="hide">
+    <div id="file-stats" class="section" style="margin-top: 80px;">
+    <h2>File Stats</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Total Mutants Count</th>
+            <th>Killed Count</th>
+            <th>Not Covered Count</th>
+            <th>Escaped Count</th>
+            <th>Error Count</th>
+            <th>Skipped Count</th>
+            <th>Timeout Count</th>
+            <th>MSI</th>
+            <th>Mutation Code Coverage</th>
+            <th>Covered Code MSI</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ .FileStats.TotalMutantsCount }}</td>
+            <td>{{ .FileStats.KilledCount }}</td>
+            <td>{{ .FileStats.NotCoveredCount }}</td>
+            <td>{{ .FileStats.EscapedCount }}</td>
+            <td>{{ .FileStats.ErrorCount }}</td>
+            <td>{{ .FileStats.SkippedCount }}</td>
+            <td>{{ .FileStats.TimeOutCount }}</td>
+            <td>{{ .FileStats.Msi }}</td>
+            <td>{{ .FileStats.MutationCodeCoverage }}</td>
+            <td>{{ .FileStats.CoveredCodeMsi }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <div id="escaped" class="section">
       <h2>Escaped</h2>
       {{ if .Escaped }} {{ range $index, $entry := .Escaped }}
